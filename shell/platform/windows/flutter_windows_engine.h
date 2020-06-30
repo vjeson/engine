@@ -12,6 +12,7 @@
 
 #include "flutter/shell/platform/common/cpp/incoming_message_dispatcher.h"
 #include "flutter/shell/platform/windows/flutter_project_bundle.h"
+#include "flutter/shell/platform/windows/flutter_windows_texture_registrar.h"
 #include "flutter/shell/platform/windows/public/flutter_windows.h"
 #include "flutter/shell/platform/windows/win32_task_runner.h"
 #include "flutter/shell/platform/windows/win32_window_proc_delegate_manager.h"
@@ -75,6 +76,10 @@ class FlutterWindowsEngine {
 
   Win32TaskRunner* task_runner() { return task_runner_.get(); }
 
+  FlutterWindowsTextureRegistrar* texture_registrar() {
+    return texture_registrar_.get();
+  }
+
   Win32WindowProcDelegateManager* window_proc_delegate_manager() {
     return window_proc_delegate_manager_.get();
   }
@@ -112,6 +117,9 @@ class FlutterWindowsEngine {
 
   // The plugin registrar handle given to API clients.
   std::unique_ptr<FlutterDesktopPluginRegistrar> plugin_registrar_;
+
+  // The texture registrar.
+  std::unique_ptr<FlutterWindowsTextureRegistrar> texture_registrar_;
 
   // A callback to be called when the engine (and thus the plugin registrar)
   // is being destroyed.
