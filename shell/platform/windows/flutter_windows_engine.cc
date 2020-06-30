@@ -14,6 +14,23 @@ namespace flutter {
 
 namespace {
 
+static bool OnAcquireExternalTexture(void* user_data,
+                                     int64_t texture_id,
+                                     size_t width,
+                                     size_t height,
+                                     FlutterOpenGLTexture* texture) {
+  auto host = static_cast<FlutterWindowsEngine*>(user_data);
+
+  const auto& textures = host->GetRegistrar()->texture_registrar->textures;
+
+  auto it = textures.find(texture_id);
+  if (it != textures.end()) {
+    return it->second->PopulateTextureWithIdentifier(width, height, texture);
+  }
+
+  return false;
+}
+
 // Creates and returns a FlutterRendererConfig that renders to the view (if any)
 // of a FlutterWindowsEngine, which should be the user_data received by the
 // render callbacks.
@@ -54,6 +71,7 @@ FlutterRendererConfig GetRendererConfig() {
     }
     return host->view()->MakeResourceCurrent();
   };
+  config.open_gl.gl_external_texture_frame_callback = OnAcquireExternalTexture;
   return config;
 }
 
@@ -92,8 +110,11 @@ FlutterWindowsEngine::FlutterWindowsEngine(const FlutterProjectBundle& project)
       std::make_unique<IncomingMessageDispatcher>(messenger.get());
   messenger->dispatcher = message_dispatcher_.get();
 
+  texture_registrar_ = std::make_unique<FlutterDesktopTextureRegistrar>();
+
   plugin_registrar_ = std::make_unique<FlutterDesktopPluginRegistrar>();
   plugin_registrar_->messenger = std::move(messenger);
+  plugin_registrar_->texture_registrar = texture_registrar_.get();
   plugin_registrar_->view = std::make_unique<FlutterDesktopView>();
 }
 
@@ -173,6 +194,8 @@ bool FlutterWindowsEngine::RunWithEntrypoint(const char* entrypoint) {
   }
 
   plugin_registrar_->messenger->engine = engine_;
+  plugin_registrar_->texture_registrar->engine = engine_;
+
   return true;
 }
 
