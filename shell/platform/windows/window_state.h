@@ -8,6 +8,7 @@
 #include "flutter/shell/platform/common/cpp/client_wrapper/include/flutter/plugin_registrar.h"
 #include "flutter/shell/platform/common/cpp/incoming_message_dispatcher.h"
 #include "flutter/shell/platform/embedder/embedder.h"
+#include "flutter/shell/platform/windows/external_texture_gl.h"
 #include "flutter/shell/platform/windows/key_event_handler.h"
 #include "flutter/shell/platform/windows/keyboard_hook_handler.h"
 #include "flutter/shell/platform/windows/text_input_plugin.h"
@@ -64,11 +65,21 @@ struct FlutterDesktopPluginRegistrar {
   // The plugin messenger handle given to API clients.
   std::unique_ptr<FlutterDesktopMessenger> messenger;
 
+  // The plugin texture registrar handle given to API clients.
+  FlutterDesktopTextureRegistrar* texture_registrar;
+
   // The handle for the view associated with this registrar.
   FlutterDesktopView* view;
 
   // Callback to be called on registrar destruction.
   FlutterDesktopOnRegistrarDestroyed destruction_handler;
+};
+
+// State associated with the texture registrar.
+struct FlutterDesktopTextureRegistrar {
+  FLUTTER_API_SYMBOL(FlutterEngine) engine;
+  // The texture registrar managing external texture adapters.
+  std::map<int64_t, std::unique_ptr<flutter::ExternalTextureGL>> textures;
 };
 
 // State associated with the messenger used to communicate with the engine.

@@ -43,6 +43,8 @@ source_set("flutter_windows_source") {
     "angle_surface_manager.h",
     "cursor_handler.cc",
     "cursor_handler.h",
+    "external_texture_gl.cc",
+    "external_texture_gl.h",
     "flutter_windows.cc",
     "flutter_windows_view.cc",
     "flutter_windows_view.h",
@@ -77,6 +79,7 @@ source_set("flutter_windows_source") {
 
   deps = [
     ":flutter_windows_headers",
+    "//flutter/fml",
     "//flutter/shell/platform/common/cpp:common_cpp",
     "//flutter/shell/platform/common/cpp:common_cpp_input",
     "//flutter/shell/platform/common/cpp/client_wrapper:client_wrapper",

@@ -10,6 +10,7 @@
 
 #include "flutter_export.h"
 #include "flutter_messenger.h"
+#include "flutter_texture_registrar.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -25,6 +26,10 @@ typedef void (*FlutterDesktopOnRegistrarDestroyed)(
 // Returns the engine messenger associated with this registrar.
 FLUTTER_EXPORT FlutterDesktopMessengerRef
 FlutterDesktopRegistrarGetMessenger(FlutterDesktopPluginRegistrarRef registrar);
+
+// Returns the texture registrar associated with this registrar.
+FLUTTER_EXPORT FlutterDesktopTextureRegistrarRef
+FlutterDesktopGetTextureRegistrar(FlutterDesktopPluginRegistrarRef registrar);
 
 // Registers a callback to be called when the plugin registrar is destroyed.
 FLUTTER_EXPORT void FlutterDesktopRegistrarSetDestructionHandler(

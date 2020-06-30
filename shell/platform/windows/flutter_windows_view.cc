@@ -48,10 +48,15 @@ void FlutterWindowsView::SetState(FLUTTER_API_SYMBOL(FlutterEngine) eng) {
   messenger->engine = engine_;
   messenger->dispatcher = message_dispatcher_.get();
 
+  texture_registrar_ = std::make_unique<FlutterDesktopTextureRegistrar>();
+  texture_registrar_->engine = engine_;
+
   window_wrapper_ = std::make_unique<FlutterDesktopView>();
   window_wrapper_->view = this;
+
   plugin_registrar_ = std::make_unique<FlutterDesktopPluginRegistrar>();
   plugin_registrar_->messenger = std::move(messenger);
+  plugin_registrar_->texture_registrar = texture_registrar_.get();
   plugin_registrar_->view = window_wrapper_.get();
 
   internal_plugin_registrar_ =

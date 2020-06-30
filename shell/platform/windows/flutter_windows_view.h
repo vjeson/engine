@@ -201,6 +201,9 @@ class FlutterWindowsView : public WindowBindingHandlerDelegate {
   // The plugin registrar handle given to API clients.
   std::unique_ptr<FlutterDesktopPluginRegistrar> plugin_registrar_;
 
+  // The texture registrar handle given to API clients.
+  std::unique_ptr<FlutterDesktopTextureRegistrar> texture_registrar_;
+
   // Message dispatch manager for messages from the Flutter engine.
   std::unique_ptr<flutter::IncomingMessageDispatcher> message_dispatcher_;
 
