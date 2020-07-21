@@ -29,7 +29,8 @@ FlutterDesktopRegistrarGetMessenger(FlutterDesktopPluginRegistrarRef registrar);
 
 // Returns the texture registrar associated with this registrar.
 FLUTTER_EXPORT FlutterDesktopTextureRegistrarRef
-FlutterDesktopGetTextureRegistrar(FlutterDesktopPluginRegistrarRef registrar);
+FlutterDesktopRegistrarGetTextureRegistrar(
+    FlutterDesktopPluginRegistrarRef registrar);
 
 // Registers a callback to be called when the plugin registrar is destroyed.
 FLUTTER_EXPORT void FlutterDesktopRegistrarSetDestructionHandler(

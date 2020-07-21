@@ -18,29 +18,29 @@ extern "C" {
 typedef struct FlutterDesktopTextureRegistrar*
     FlutterDesktopTextureRegistrarRef;
 
-// Constructs a pixel buffer object for the plugin side, providing
-// height/width and buffer pointers.
+// An image buffer object
 typedef struct {
-  // Bitmap buffer pointer, currently only supports RGBA.
+  // The pixel data buffer.
   const uint8_t* buffer;
   // Width of the pixel buffer.
   size_t width;
   // Height of the pixel buffer.
   size_t height;
-} PixelBuffer;
+} FlutterDesktopPixelBuffer;
 
-// The pixel buffer copy callback definition is provided to
+// The pixel buffer copy callback definition provided to
 // the Flutter engine to copy the texture.
-typedef const PixelBuffer* (*FlutterTextureCallback)(size_t width,
-                                                     size_t height,
-                                                     void* user_data);
+typedef const FlutterDesktopPixelBuffer* (*FlutterDesktopTextureCallback)(
+    size_t width,
+    size_t height,
+    void* user_data);
 
 // Registers a new texture with the Flutter engine and returns the texture ID,
 // The engine will use the |texture_callback|
 // function to copy the pixel buffer from the plugin caller.
 FLUTTER_EXPORT int64_t FlutterDesktopRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
-    FlutterTextureCallback texture_callback,
+    FlutterDesktopTextureCallback texture_callback,
     void* user_data);
 
 // Unregisters an existing texture from the Flutter engine for a |texture_id|.

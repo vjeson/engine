@@ -105,14 +105,14 @@ void FlutterDesktopMessengerSetCallback(FlutterDesktopMessengerRef messenger,
   }
 }
 
-FlutterDesktopTextureRegistrarRef FlutterDesktopGetTextureRegistrar(
+FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
   return reinterpret_cast<FlutterDesktopTextureRegistrarRef>(1);
 }
 
 int64_t FlutterDesktopRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
-    FlutterTextureCallback texture_callback,
+    FlutterDesktopTextureCallback texture_callback,
     void* user_data) {
   uint64_t result = -1;
   if (s_stub_implementation) {

@@ -4,8 +4,6 @@
 
 #include "flutter/shell/platform/windows/external_texture_gl.h"
 
-#include "flutter/fml/logging.h"
-
 // OpenGL ES and EGL includes
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -44,11 +42,8 @@ struct GlProcs {
     glTexImage2D =
         reinterpret_cast<glTexImage2DProc>(eglGetProcAddress("glTexImage2D"));
 
-    FML_DCHECK(glGenTextures);
-    FML_DCHECK(glDeleteTextures);
-    FML_DCHECK(glBindTexture);
-    FML_DCHECK(glTexParameteri);
-    FML_DCHECK(glTexImage2D);
+    valid = glGenTextures && glDeleteTextures && glBindTexture &&
+            glTexParameteri && glTexImage2D;
   }
 
   glGenTexturesProc glGenTextures;
@@ -56,6 +51,7 @@ struct GlProcs {
   glBindTextureProc glBindTexture;
   glTexParameteriProc glTexParameteri;
   glTexImage2DProc glTexImage2D;
+  bool valid;
 };
 
 struct ExternalTextureGLState {
@@ -68,54 +64,52 @@ const GlProcs ExternalTextureGLState::procs = []() {
   return procs;
 }();
 
-ExternalTextureGL::ExternalTextureGL(FlutterTextureCallback texture_callback,
-                                     void* user_data)
+ExternalTextureGL::ExternalTextureGL(
+    FlutterDesktopTextureCallback texture_callback,
+    void* user_data)
     : state_(std::make_unique<ExternalTextureGLState>()),
       texture_callback_(texture_callback),
       user_data_(user_data) {}
 
 ExternalTextureGL::~ExternalTextureGL() {
-  auto deleteTextures = state_->procs.glDeleteTextures;
+  const auto& procs = state_->procs;
 
-  if (state_->gl_texture != 0) {
-    deleteTextures(1, &state_->gl_texture);
-  }
+  if (procs.valid && state_->gl_texture != 0)
+    procs.glDeleteTextures(1, &state_->gl_texture);
 }
 
 bool ExternalTextureGL::PopulateTextureWithIdentifier(
     size_t width,
     size_t height,
     FlutterOpenGLTexture* opengl_texture) {
-  const PixelBuffer* pixel_buffer =
+  const FlutterDesktopPixelBuffer* pixel_buffer =
       texture_callback_(width, height, user_data_);
 
-  if (!pixel_buffer || !pixel_buffer->buffer) {
+  const auto& procs = state_->procs;
+
+  if (!procs.valid || !pixel_buffer || !pixel_buffer->buffer) {
     std::cerr << "Failed to copy pixel buffer from plugin." << std::endl;
     return false;
   }
 
   if (state_->gl_texture == 0) {
-    state_->procs.glGenTextures(1, &state_->gl_texture);
+    procs.glGenTextures(1, &state_->gl_texture);
 
-    state_->procs.glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
+    procs.glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
 
-    state_->procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-                                  GL_CLAMP_TO_BORDER);
-    state_->procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,
-                                  GL_CLAMP_TO_BORDER);
+    procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-    state_->procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                                  GL_LINEAR);
-    state_->procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                                  GL_LINEAR);
+    procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    procs.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
   } else {
-    state_->procs.glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
+    procs.glBindTexture(GL_TEXTURE_2D, state_->gl_texture);
   }
 
-  state_->procs.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_buffer->width,
-                             pixel_buffer->height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                             pixel_buffer->buffer);
+  procs.glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, pixel_buffer->width,
+                     pixel_buffer->height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     pixel_buffer->buffer);
 
   opengl_texture->target = GL_TEXTURE_2D;
   opengl_texture->name = state_->gl_texture;

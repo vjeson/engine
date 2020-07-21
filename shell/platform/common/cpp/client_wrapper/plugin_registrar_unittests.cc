@@ -21,7 +21,7 @@ class TestApi : public testing::StubFlutterApi {
   struct FakeTexture {
     int64_t texture_id;
     int32_t mark_count;
-    FlutterTextureCallback texture_callback;
+    FlutterDesktopTextureCallback texture_callback;
     void* user_data;
   };
 
@@ -62,8 +62,9 @@ class TestApi : public testing::StubFlutterApi {
     return last_destruction_callback_set_;
   }
 
-  int64_t RegisterExternalTexture(FlutterTextureCallback texture_callback,
-                                  void* user_data) override {
+  int64_t RegisterExternalTexture(
+      FlutterDesktopTextureCallback texture_callback,
+      void* user_data) override {
     last_texture_id_++;
 
     auto texture = std::make_unique<FakeTexture>();

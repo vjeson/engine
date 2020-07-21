@@ -5,12 +5,12 @@
 #ifndef FLUTTER_SHELL_PLATFORM_COMMON_CPP_CLIENT_WRAPPER_INCLUDE_FLUTTER_PLUGIN_REGISTRAR_H_
 #define FLUTTER_SHELL_PLATFORM_COMMON_CPP_CLIENT_WRAPPER_INCLUDE_FLUTTER_PLUGIN_REGISTRAR_H_
 
+#include <flutter_plugin_registrar.h>
+
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
-
-#include <flutter_plugin_registrar.h>
 
 #include "binary_messenger.h"
 #include "texture_registrar.h"

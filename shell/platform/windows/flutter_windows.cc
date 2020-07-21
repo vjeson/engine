@@ -399,14 +399,14 @@ void FlutterDesktopMessengerSetCallback(FlutterDesktopMessengerRef messenger,
   messenger->dispatcher->SetMessageCallback(channel, callback, user_data);
 }
 
-FlutterDesktopTextureRegistrarRef FlutterDesktopGetTextureRegistrar(
+FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
   return registrar->texture_registrar;
 }
 
 int64_t FlutterDesktopRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
-    FlutterTextureCallback texture_callback,
+    FlutterDesktopTextureCallback texture_callback,
     void* user_data) {
   auto texture_gl =
       std::make_unique<flutter::ExternalTextureGL>(texture_callback, user_data);

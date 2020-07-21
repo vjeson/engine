@@ -141,8 +141,9 @@ class TextureRegistrarImpl : public TextureRegistrar {
   TextureRegistrarImpl& operator=(TextureRegistrarImpl const&) = delete;
 
   virtual int64_t RegisterTexture(Texture* texture) override {
-    FlutterTextureCallback callback =
-        [](size_t width, size_t height, void* user_data) -> const PixelBuffer* {
+    FlutterDesktopTextureCallback callback =
+        [](size_t width, size_t height,
+           void* user_data) -> const FlutterDesktopPixelBuffer* {
       return static_cast<Texture*>(user_data)->CopyPixelBuffer(width, height);
     };
     int64_t texture_id = FlutterDesktopRegisterExternalTexture(
@@ -170,7 +171,8 @@ PluginRegistrar::PluginRegistrar(FlutterDesktopPluginRegistrarRef registrar)
     : registrar_(registrar) {
   auto core_messenger = FlutterDesktopRegistrarGetMessenger(registrar_);
   messenger_ = std::make_unique<BinaryMessengerImpl>(core_messenger);
-  auto texture_registrar = FlutterDesktopGetTextureRegistrar(registrar_);
+  auto texture_registrar =
+      FlutterDesktopRegistrarGetTextureRegistrar(registrar_);
   textures_ = std::make_unique<TextureRegistrarImpl>(texture_registrar);
 }
 

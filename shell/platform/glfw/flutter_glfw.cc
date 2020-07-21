@@ -1046,7 +1046,7 @@ void FlutterDesktopMessengerSetCallback(FlutterDesktopMessengerRef messenger,
                                                             user_data);
 }
 
-FlutterDesktopTextureRegistrarRef FlutterDesktopGetTextureRegistrar(
+FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
     FlutterDesktopPluginRegistrarRef registrar) {
   std::cerr << "GLFW Texture support is not implemented yet." << std::endl;
   return nullptr;
@@ -1054,7 +1054,7 @@ FlutterDesktopTextureRegistrarRef FlutterDesktopGetTextureRegistrar(
 
 int64_t FlutterDesktopRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
-    FlutterTextureCallback texture_callback,
+    FlutterDesktopTextureCallback texture_callback,
     void* user_data) {
   std::cerr << "GLFW Texture support is not implemented yet." << std::endl;
   return -1;

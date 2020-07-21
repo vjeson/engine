@@ -6,8 +6,8 @@
 #define FLUTTER_SHELL_PLATFORM_COMMON_CPP_CLIENT_WRAPPER_INCLUDE_FLUTTER_TEXTURE_REGISTRAR_H_
 
 #include <flutter_texture_registrar.h>
-
 #include <stdint.h>
+
 #include <memory>
 
 namespace flutter {
@@ -18,29 +18,25 @@ class Texture {
   virtual ~Texture() {}
   // This interface is used to respond to texture copy requests from the Flutter
   // engine, Flutter engine will be providing the |height| and |width|
-  // parameters of bounds. In some cases, the user can be scale the texture to
+  // parameters of bounds. In some cases, the user can scale the texture to
   // the size of the bounds to reduce memory usage.
-  virtual const PixelBuffer* CopyPixelBuffer(size_t width, size_t height) = 0;
+  virtual const FlutterDesktopPixelBuffer* CopyPixelBuffer(size_t width,
+                                                           size_t height) = 0;
 };
 
+// An object keeping track of external textures
 class TextureRegistrar {
  public:
   virtual ~TextureRegistrar() {}
 
-  /**
-   * Registers a |texture| object and returns the ID for that texture.
-   */
+  // Registers a |texture| object and returns the ID for that texture.
   virtual int64_t RegisterTexture(Texture* texture) = 0;
 
-  /**
-   * Notify the flutter engine that the texture object corresponding
-   * to |texure_id| needs to render a new texture.
-   */
+  // Notifies the flutter engine that the texture object corresponding
+  // to |texure_id| needs to render a new texture.
   virtual void MarkTextureFrameAvailable(int64_t texture_id) = 0;
 
-  /**
-   * Unregisters an existing Texture object.
-   */
+  // Unregisters an existing Texture object.
   virtual void UnregisterTexture(int64_t texture_id) = 0;
 };
 
