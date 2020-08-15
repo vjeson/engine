@@ -710,26 +710,6 @@ abstract class Window {
   ///
   /// This will be the string "`/`" if no particular route was requested.
   ///
-  /// ## Android
-  ///
-  /// On Android, calling
-  /// [`FlutterView.setInitialRoute`](/javadoc/io/flutter/view/FlutterView.html#setInitialRoute-java.lang.String-)
-  /// will set this value. The value must be set sufficiently early, i.e. before
-  /// the [runApp] call is executed in Dart, for this to have any effect on the
-  /// framework. The `createFlutterView` method in your `FlutterActivity`
-  /// subclass is a suitable time to set the value. The application's
-  /// `AndroidManifest.xml` file must also be updated to have a suitable
-  /// [`<intent-filter>`](https://developer.android.com/guide/topics/manifest/intent-filter-element.html).
-  ///
-  /// ## iOS
-  ///
-  /// On iOS, calling
-  /// [`FlutterViewController.setInitialRoute`](/objcdoc/Classes/FlutterViewController.html#/c:objc%28cs%29FlutterViewController%28im%29setInitialRoute:)
-  /// will set this value. The value must be set sufficiently early, i.e. before
-  /// the [runApp] call is executed in Dart, for this to have any effect on the
-  /// framework. The `application:didFinishLaunchingWithOptions:` method is a
-  /// suitable time to set this value.
-  ///
   /// See also:
   ///
   ///  * [Navigator], a widget that handles routing.
@@ -1069,30 +1049,6 @@ class FrameTiming {
   /// To get the [FrameTiming] of your app, see [Window.onReportTimings].
   FrameTiming._(List<int> timestamps)
       : assert(timestamps.length == FramePhase.values.length), _timestamps = timestamps;
-
-  /// Construct [FrameTiming] with given timestamp in micrseconds.
-  ///
-  /// This constructor is used for unit test only. Real [FrameTiming]s should
-  /// be retrieved from [Window.onReportTimings].
-  ///
-  /// TODO(CareF): This is part of #20229. Remove back to default constructor
-  /// after #20229 lands and corresponding framwork PRs land.
-  factory FrameTiming.fromTimeStamps({
-    int? vsyncStart,
-    required int buildStart,
-    required int buildFinish,
-    required int rasterStart,
-    required int rasterFinish
-  }) {
-    return FrameTiming._(<int>[
-      // This is for temporarily backward compatiblilty.
-      vsyncStart ?? buildStart,
-      buildStart,
-      buildFinish,
-      rasterStart,
-      rasterFinish
-    ]);
-  }
 
   /// This is a raw timestamp in microseconds from some epoch. The epoch in all
   /// [FrameTiming] is the same, but it may not match [DateTime]'s epoch.
