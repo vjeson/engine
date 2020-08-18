@@ -226,3 +226,40 @@ void FlutterDesktopMessengerSetCallback(FlutterDesktopMessengerRef messenger,
                                         void* user_data) {
   messenger->dispatcher->SetMessageCallback(channel, callback, user_data);
 }
+
+FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
+    FlutterDesktopPluginRegistrarRef registrar) {
+  return registrar->texture_registrar;
+}
+
+int64_t FlutterDesktopRegisterExternalTexture(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    FlutterDesktopTextureCallback texture_callback,
+    void* user_data) {
+  auto texture_gl =
+      std::make_unique<flutter::ExternalTextureGL>(texture_callback, user_data);
+  int64_t texture_id = texture_gl->texture_id();
+  texture_registrar->textures[texture_id] = std::move(texture_gl);
+  if (FlutterEngineRegisterExternalTexture(texture_registrar->engine,
+                                           texture_id) == kSuccess) {
+    return texture_id;
+  }
+  return -1;
+}
+
+bool FlutterDesktopUnregisterExternalTexture(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    int64_t texture_id) {
+  auto it = texture_registrar->textures.find(texture_id);
+  if (it != texture_registrar->textures.end())
+    texture_registrar->textures.erase(it);
+  return (FlutterEngineUnregisterExternalTexture(texture_registrar->engine,
+                                                 texture_id) == kSuccess);
+}
+
+bool FlutterDesktopMarkExternalTextureFrameAvailable(
+    FlutterDesktopTextureRegistrarRef texture_registrar,
+    int64_t texture_id) {
+  return (FlutterEngineMarkExternalTextureFrameAvailable(
+              texture_registrar->engine, texture_id) == kSuccess);
+}

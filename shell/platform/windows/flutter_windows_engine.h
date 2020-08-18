@@ -97,6 +97,9 @@ class FlutterWindowsEngine {
 
   // The plugin registrar handle given to API clients.
   std::unique_ptr<FlutterDesktopPluginRegistrar> plugin_registrar_;
+
+  // The texture registrar handle given to API clients.
+  std::unique_ptr<FlutterDesktopTextureRegistrar> texture_registrar_;
 };
 
 }  // namespace flutter
