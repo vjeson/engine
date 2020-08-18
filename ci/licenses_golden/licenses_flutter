@@ -836,7 +836,9 @@ FILE: ../../../flutter/shell/platform/android/surface/android_surface_mock.h
 FILE: ../../../flutter/shell/platform/android/vsync_waiter_android.cc
 FILE: ../../../flutter/shell/platform/android/vsync_waiter_android.h
 FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/basic_message_channel_unittests.cc
+FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/binary_messenger_impl.h
 FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/byte_buffer_streams.h
+FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/core_implementations.cc
 FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/encodable_value_unittests.cc
 FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/engine_method_result.cc
 FILE: ../../../flutter/shell/platform/common/cpp/client_wrapper/event_channel_unittests.cc
@@ -920,6 +922,7 @@ FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterBinaryM
 FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterCallbackCache.mm
 FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterCallbackCache_Internal.h
 FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterDartProject.mm
+FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterDartProjectTest.mm
 FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterDartProject_Internal.h
 FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterEngine.mm
 FILE: ../../../flutter/shell/platform/darwin/ios/framework/Source/FlutterEnginePlatformViewTest.mm
@@ -1356,6 +1359,9 @@ FILE: ../../../flutter/shell/platform/windows/public/flutter_windows.h
 FILE: ../../../flutter/shell/platform/windows/string_conversion.cc
 FILE: ../../../flutter/shell/platform/windows/string_conversion.h
 FILE: ../../../flutter/shell/platform/windows/string_conversion_unittests.cc
+FILE: ../../../flutter/shell/platform/windows/system_utils.h
+FILE: ../../../flutter/shell/platform/windows/system_utils_unittests.cc
+FILE: ../../../flutter/shell/platform/windows/system_utils_win32.cc
 FILE: ../../../flutter/shell/platform/windows/text_input_plugin.cc
 FILE: ../../../flutter/shell/platform/windows/text_input_plugin.h
 FILE: ../../../flutter/shell/platform/windows/win32_dpi_utils.cc
