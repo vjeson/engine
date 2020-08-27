@@ -37,25 +37,25 @@ struct GlProcs {
 };
 
 static const GlProcs& GlProcs() {
-  auto glGenTextures =
-      reinterpret_cast<glGenTexturesProc>(eglGetProcAddress("glGenTextures"));
-  auto glDeleteTextures = reinterpret_cast<glDeleteTexturesProc>(
-      eglGetProcAddress("glDeleteTextures"));
-  auto glBindTexture =
-      reinterpret_cast<glBindTextureProc>(eglGetProcAddress("glBindTexture"));
-  auto glTexParameteri = reinterpret_cast<glTexParameteriProc>(
-      eglGetProcAddress("glTexParameteri"));
-  auto glTexImage2D =
-      reinterpret_cast<glTexImage2DProc>(eglGetProcAddress("glTexImage2D"));
+  static struct GlProcs procs = {};
+  static bool initialized = false;
+  if (!initialized) {
+    procs.glGenTextures =
+        reinterpret_cast<glGenTexturesProc>(eglGetProcAddress("glGenTextures"));
+    procs.glDeleteTextures = reinterpret_cast<glDeleteTexturesProc>(
+        eglGetProcAddress("glDeleteTextures"));
+    procs.glBindTexture =
+        reinterpret_cast<glBindTextureProc>(eglGetProcAddress("glBindTexture"));
+    procs.glTexParameteri = reinterpret_cast<glTexParameteriProc>(
+        eglGetProcAddress("glTexParameteri"));
+    procs.glTexImage2D =
+        reinterpret_cast<glTexImage2DProc>(eglGetProcAddress("glTexImage2D"));
 
-  auto valid = glBindTexture && glDeleteTextures && glBindTexture &&
-               glTexParameteri && glTexImage2D;
-
-  const static struct GlProcs procs = {
-      glGenTextures,   glDeleteTextures, glBindTexture,
-      glTexParameteri, glTexImage2D,     valid,
-  };
-
+    procs.valid = procs.glGenTextures && procs.glDeleteTextures &&
+                  procs.glBindTexture && procs.glTexParameteri &&
+                  procs.glTexImage2D;
+    initialized = true;
+  }
   return procs;
 }
 
@@ -93,8 +93,8 @@ bool ExternalTextureGL::PopulateTexture(size_t width,
   opengl_texture->target = GL_TEXTURE_2D;
   opengl_texture->name = state_->gl_texture;
   opengl_texture->format = GL_RGBA8;
-  opengl_texture->destruction_callback = (VoidCallback) nullptr;
-  opengl_texture->user_data = static_cast<void*>(this);
+  opengl_texture->destruction_callback = [](void* user_data) {};
+  opengl_texture->user_data = nullptr;
   opengl_texture->width = width;
   opengl_texture->height = height;
 
