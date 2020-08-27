@@ -125,6 +125,7 @@ executable("flutter_windows_unittests") {
   testonly = true
 
   sources = [
+    "flutter_windows_texture_registrar_unittests.cc",
     "string_conversion_unittests.cc",
     "system_utils_unittests.cc",
     "testing/win32_flutter_window_test.cc",

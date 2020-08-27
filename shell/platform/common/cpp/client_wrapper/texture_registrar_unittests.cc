@@ -104,11 +104,11 @@ TEST(TextureRegistrarTest, RegisterUnregisterTexture) {
   textures->MarkTextureFrameAvailable(texture_id);
   textures->MarkTextureFrameAvailable(texture_id);
   bool success = textures->MarkTextureFrameAvailable(texture_id);
-  EXPECT_EQ(success, true);
+  EXPECT_TRUE(success);
   EXPECT_EQ(texture->mark_count, 3);
 
   success = textures->UnregisterTexture(texture_id);
-  EXPECT_EQ(success, true);
+  EXPECT_TRUE(success);
 
   texture = test_api->GetFakeTexture(texture_id);
   EXPECT_EQ(texture, nullptr);
@@ -124,7 +124,7 @@ TEST(TextureRegistrarTest, UnregisterInvalidTexture) {
   TextureRegistrar* textures = registrar.texture_registrar();
 
   bool success = textures->UnregisterTexture(42);
-  EXPECT_EQ(success, false);
+  EXPECT_FALSE(success);
 }
 
 // Tests that claiming a new frame being available for an unknown texture
@@ -137,7 +137,7 @@ TEST(TextureRegistrarTest, MarkFrameAvailableInvalidTexture) {
   TextureRegistrar* textures = registrar.texture_registrar();
 
   bool success = textures->MarkTextureFrameAvailable(42);
-  EXPECT_EQ(success, false);
+  EXPECT_FALSE(success);
 }
 
 }  // namespace flutter

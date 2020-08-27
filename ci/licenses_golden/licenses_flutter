@@ -1358,6 +1358,7 @@ FILE: ../../../flutter/shell/platform/windows/flutter_windows_engine.cc
 FILE: ../../../flutter/shell/platform/windows/flutter_windows_engine.h
 FILE: ../../../flutter/shell/platform/windows/flutter_windows_texture_registrar.cc
 FILE: ../../../flutter/shell/platform/windows/flutter_windows_texture_registrar.h
+FILE: ../../../flutter/shell/platform/windows/flutter_windows_texture_registrar_unittests.cc
 FILE: ../../../flutter/shell/platform/windows/flutter_windows_view.cc
 FILE: ../../../flutter/shell/platform/windows/flutter_windows_view.h
 FILE: ../../../flutter/shell/platform/windows/key_event_handler.cc

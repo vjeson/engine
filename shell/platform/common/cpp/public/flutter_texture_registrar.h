@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+struct FlutterDesktopTextureRegistrar;
 // Opaque reference to a texture registrar.
 typedef struct FlutterDesktopTextureRegistrar*
     FlutterDesktopTextureRegistrarRef;
