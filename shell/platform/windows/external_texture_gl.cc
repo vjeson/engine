@@ -93,7 +93,7 @@ bool ExternalTextureGL::PopulateTexture(size_t width,
   opengl_texture->target = GL_TEXTURE_2D;
   opengl_texture->name = state_->gl_texture;
   opengl_texture->format = GL_RGBA8;
-  opengl_texture->destruction_callback = [](void* user_data) {};
+  opengl_texture->destruction_callback = nullptr;
   opengl_texture->user_data = nullptr;
   opengl_texture->width = width;
   opengl_texture->height = height;

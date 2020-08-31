@@ -24,11 +24,6 @@ TEST(FlutterWindowsTextureRegistrarTest, CreateDestroy) {
   EXPECT_TRUE(true);
 }
 
-// TODO Mock FlutterEngineRegisterExternalTexture etc.
-// TEST(FlutterWindowsTextureRegistrarTest, RegisterTexture) {
-//   EXPECT_TRUE(true);
-// }
-
 TEST(FlutterWindowsTextureRegistrarTest, PopulateInvalidTexture) {
   FlutterDesktopEngineProperties props = {};
   props.assets_path = L"FakeAssets";
@@ -41,6 +36,9 @@ TEST(FlutterWindowsTextureRegistrarTest, PopulateInvalidTexture) {
   auto result = registrar.PopulateTexture(1, 640, 480, nullptr);
   EXPECT_FALSE(result);
 }
+
+// TODO Add additional tests for testing actual texture registration using
+// FlutterEngineRegisterExternalTexture
 
 }  // namespace testing
 }  // namespace flutter
