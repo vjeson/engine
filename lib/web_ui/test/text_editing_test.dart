@@ -30,22 +30,14 @@ String lastInputAction;
 
 final InputConfiguration singlelineConfig = InputConfiguration(
   inputType: EngineInputType.text,
-  obscureText: false,
-  inputAction: 'TextInputAction.done',
-  autocorrect: true,
-  textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-      'TextCapitalization.none'),
 );
 final Map<String, dynamic> flutterSinglelineConfig =
     createFlutterConfig('text');
 
 final InputConfiguration multilineConfig = InputConfiguration(
-    inputType: EngineInputType.multiline,
-    obscureText: false,
-    inputAction: 'TextInputAction.newline',
-    autocorrect: true,
-    textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-        'TextCapitalization.none'));
+  inputType: EngineInputType.multiline,
+  inputAction: 'TextInputAction.newline',
+);
 final Map<String, dynamic> flutterMultilineConfig =
     createFlutterConfig('multiline');
 
@@ -115,14 +107,23 @@ void testMain() {
       expect(document.activeElement, document.body);
     });
 
+    test('Respects read-only config', () {
+      final InputConfiguration config = InputConfiguration(readOnly: true);
+      editingElement.enable(
+        config,
+        onChange: trackEditingState,
+        onAction: trackInputAction,
+      );
+      expect(document.getElementsByTagName('input'), hasLength(1));
+      final InputElement input = document.getElementsByTagName('input')[0];
+      expect(editingElement.domElement, input);
+      expect(input.getAttribute('readonly'), 'readonly');
+
+      editingElement.disable();
+    });
+
     test('Knows how to create password fields', () {
-      final InputConfiguration config = InputConfiguration(
-          inputType: EngineInputType.text,
-          inputAction: 'TextInputAction.done',
-          obscureText: true,
-          autocorrect: true,
-          textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-              'TextCapitalization.none'));
+      final InputConfiguration config = InputConfiguration(obscureText: true);
       editingElement.enable(
         config,
         onChange: trackEditingState,
@@ -137,13 +138,7 @@ void testMain() {
     });
 
     test('Knows to turn autocorrect off', () {
-      final InputConfiguration config = InputConfiguration(
-          inputType: EngineInputType.text,
-          inputAction: 'TextInputAction.done',
-          obscureText: false,
-          autocorrect: false,
-          textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-              'TextCapitalization.none'));
+      final InputConfiguration config = InputConfiguration(autocorrect: false);
       editingElement.enable(
         config,
         onChange: trackEditingState,
@@ -158,13 +153,7 @@ void testMain() {
     });
 
     test('Knows to turn autocorrect on', () {
-      final InputConfiguration config = InputConfiguration(
-          inputType: EngineInputType.text,
-          inputAction: 'TextInputAction.done',
-          obscureText: false,
-          autocorrect: true,
-          textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-              'TextCapitalization.none'));
+      final InputConfiguration config = InputConfiguration(autocorrect: true);
       editingElement.enable(
         config,
         onChange: trackEditingState,
@@ -298,13 +287,8 @@ void testMain() {
     });
 
     test('Triggers input action', () {
-      final InputConfiguration config = InputConfiguration(
-          inputType: EngineInputType.text,
-          obscureText: false,
-          inputAction: 'TextInputAction.done',
-          autocorrect: true,
-          textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-              'TextCapitalization.none'));
+      final InputConfiguration config =
+          InputConfiguration(inputAction: 'TextInputAction.done');
       editingElement.enable(
         config,
         onChange: trackEditingState,
@@ -326,12 +310,9 @@ void testMain() {
 
     test('Does not trigger input action in multi-line mode', () {
       final InputConfiguration config = InputConfiguration(
-          inputType: EngineInputType.multiline,
-          obscureText: false,
-          inputAction: 'TextInputAction.done',
-          autocorrect: true,
-          textCapitalization: TextCapitalizationConfig.fromInputConfiguration(
-              'TextCapitalization.none'));
+        inputType: EngineInputType.multiline,
+        inputAction: 'TextInputAction.done',
+      );
       editingElement.enable(
         config,
         onChange: trackEditingState,
@@ -686,6 +667,45 @@ void testMain() {
       expect(spy.messages, isEmpty);
     });
 
+    test('setClient, setEditingState, show, updateConfig, clearClient', () {
+      final MethodCall setClient = MethodCall('TextInput.setClient', <dynamic>[
+        123,
+        createFlutterConfig('text', readOnly: true),
+      ]);
+      sendFrameworkMessage(codec.encodeMethodCall(setClient));
+
+      const MethodCall setEditingState = MethodCall(
+        'TextInput.setEditingState',
+        <String, dynamic>{
+          'text': 'abcd',
+          'selectionBase': 2,
+          'selectionExtent': 3,
+        },
+      );
+      sendFrameworkMessage(codec.encodeMethodCall(setEditingState));
+
+      const MethodCall show = MethodCall('TextInput.show');
+      sendFrameworkMessage(codec.encodeMethodCall(show));
+
+      final HtmlElement element = textEditing.editingElement.domElement;
+      expect(element.getAttribute('readonly'), 'readonly');
+
+      // Update the read-only config.
+      final MethodCall updateConfig = MethodCall(
+        'TextInput.updateConfig',
+        createFlutterConfig('text', readOnly: false),
+      );
+      sendFrameworkMessage(codec.encodeMethodCall(updateConfig));
+
+      expect(element.hasAttribute('readonly'), isFalse);
+
+      const MethodCall clearClient = MethodCall('TextInput.clearClient');
+      sendFrameworkMessage(codec.encodeMethodCall(clearClient));
+
+      // Confirm that [HybridTextEditing] didn't send any messages.
+      expect(spy.messages, isEmpty);
+    });
+
     test('do not close connection on blur', () async {
       final MethodCall setClient = MethodCall(
           'TextInput.setClient', <dynamic>[123, flutterSinglelineConfig]);
@@ -996,7 +1016,7 @@ void testMain() {
 
     test(
         'singleTextField Autofill: setClient, setEditingState, show, '
-        'setEditingState, clearClient', () {
+        'setSizeAndTransform, setEditingState, clearClient', () {
       // Create a configuration with focused element has autofil hint.
       final Map<String, dynamic> flutterSingleAutofillElementConfig =
           createFlutterConfig('text', autofillHint: 'username');
@@ -1014,6 +1034,11 @@ void testMain() {
 
       const MethodCall show = MethodCall('TextInput.show');
       sendFrameworkMessage(codec.encodeMethodCall(show));
+
+      final MethodCall setSizeAndTransform =
+          configureSetSizeAndTransformMethodCall(150, 50,
+              Matrix4.translationValues(10.0, 20.0, 30.0).storage.toList());
+      sendFrameworkMessage(codec.encodeMethodCall(setSizeAndTransform));
 
       // The second [setEditingState] should override the first one.
       checkInputEditingState(
@@ -1034,8 +1059,66 @@ void testMain() {
     });
 
     test(
+        'singleTextField Autofill setEditableSizeAndTransform preserves'
+        'editing state', () {
+      // Create a configuration with focused element has autofil hint.
+      final Map<String, dynamic> flutterSingleAutofillElementConfig =
+          createFlutterConfig('text', autofillHint: 'username');
+      final MethodCall setClient = MethodCall('TextInput.setClient',
+          <dynamic>[123, flutterSingleAutofillElementConfig]);
+      sendFrameworkMessage(codec.encodeMethodCall(setClient));
+
+      const MethodCall setEditingState1 =
+          MethodCall('TextInput.setEditingState', <String, dynamic>{
+        'text': 'abcd',
+        'selectionBase': 2,
+        'selectionExtent': 3,
+      });
+      sendFrameworkMessage(codec.encodeMethodCall(setEditingState1));
+
+      const MethodCall show = MethodCall('TextInput.show');
+      sendFrameworkMessage(codec.encodeMethodCall(show));
+
+      final InputElement inputElement =
+          textEditing.editingElement.domElement as InputElement;
+      expect(inputElement.value, 'abcd');
+      if (!(browserEngine == BrowserEngine.webkit &&
+          operatingSystem == OperatingSystem.macOs)) {
+        // In Safari Desktop Autofill menu appears as soon as an element is
+        // focused, therefore the input element is only focused after the
+        // location is received.
+        expect(document.activeElement, inputElement);
+        expect(inputElement.selectionStart, 2);
+        expect(inputElement.selectionEnd, 3);
+      }
+
+      // The transform is changed. For example after a validation error, red
+      // line appeared under the input field.
+      final MethodCall setSizeAndTransform =
+          configureSetSizeAndTransformMethodCall(150, 50,
+              Matrix4.translationValues(10.0, 20.0, 30.0).storage.toList());
+      sendFrameworkMessage(codec.encodeMethodCall(setSizeAndTransform));
+
+      // Check the element still has focus. User can keep editing.
+      expect(document.activeElement, textEditing.editingElement.domElement);
+
+      // Check the cursor location is the same.
+      checkInputEditingState(
+          textEditing.editingElement.domElement, 'abcd', 2, 3);
+
+      const MethodCall clearClient = MethodCall('TextInput.clearClient');
+      sendFrameworkMessage(codec.encodeMethodCall(clearClient));
+
+      // Confirm that [HybridTextEditing] didn't send any messages.
+      expect(spy.messages, isEmpty);
+      // Form stays on the DOM until autofill context is finalized.
+      expect(document.getElementsByTagName('form'), isNotEmpty);
+      expect(formsOnTheDom, hasLength(1));
+    });
+
+    test(
         'multiTextField Autofill: setClient, setEditingState, show, '
-        'setEditingState, clearClient', () {
+        'setSizeAndTransform setEditingState, clearClient', () {
       // Create a configuration with an AutofillGroup of four text fields.
       final Map<String, dynamic> flutterMultiAutofillElementConfig =
           createFlutterConfig('text',
@@ -1060,6 +1143,11 @@ void testMain() {
 
       const MethodCall show = MethodCall('TextInput.show');
       sendFrameworkMessage(codec.encodeMethodCall(show));
+
+      final MethodCall setSizeAndTransform =
+          configureSetSizeAndTransformMethodCall(150, 50,
+              Matrix4.translationValues(10.0, 20.0, 30.0).storage.toList());
+      sendFrameworkMessage(codec.encodeMethodCall(setSizeAndTransform));
 
       // The second [setEditingState] should override the first one.
       checkInputEditingState(
@@ -1433,6 +1521,11 @@ void testMain() {
       const MethodCall show = MethodCall('TextInput.show');
       sendFrameworkMessage(codec.encodeMethodCall(show));
 
+      final MethodCall setSizeAndTransform =
+          configureSetSizeAndTransformMethodCall(150, 50,
+              Matrix4.translationValues(10.0, 20.0, 30.0).storage.toList());
+      sendFrameworkMessage(codec.encodeMethodCall(setSizeAndTransform));
+
       // The second [setEditingState] should override the first one.
       checkInputEditingState(
           textEditing.editingElement.domElement, 'abcd', 2, 3);
@@ -1693,7 +1786,8 @@ void testMain() {
       // Autofill value is applied to the element.
       expect(firstElement.name,
           BrowserAutofillHints.instance.flutterToEngine('password'));
-      expect(firstElement.id, BrowserAutofillHints.instance.flutterToEngine('password'));
+      expect(firstElement.id,
+          BrowserAutofillHints.instance.flutterToEngine('password'));
       expect(firstElement.type, 'password');
       if (browserEngine == BrowserEngine.firefox) {
         expect(firstElement.name,
@@ -1721,7 +1815,6 @@ void testMain() {
       final EngineAutofillForm autofillForm =
           EngineAutofillForm.fromFrameworkMessage(
               createAutofillInfo('username', 'field1'), fields);
-
 
       expect(autofillForm.formIdentifier, 'aabbcc*jjkkll*zzyyxx');
     });
@@ -2053,6 +2146,7 @@ void checkTextAreaEditingState(
 /// simplicity.
 Map<String, dynamic> createFlutterConfig(
   String inputType, {
+  bool readOnly = false,
   bool obscureText = false,
   bool autocorrect = true,
   String textCapitalization = 'TextCapitalization.none',
@@ -2066,6 +2160,7 @@ Map<String, dynamic> createFlutterConfig(
       'name': 'TextInputType.$inputType',
       if (decimal) 'decimal': true,
     },
+    'readOnly': readOnly,
     'obscureText': obscureText,
     'autocorrect': autocorrect,
     'inputAction': inputAction ?? 'TextInputAction.done',

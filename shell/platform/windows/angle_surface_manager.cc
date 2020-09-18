@@ -8,11 +8,10 @@
 
 namespace flutter {
 
-AngleSurfaceManager::AngleSurfaceManager(WindowsRenderTarget* target)
+AngleSurfaceManager::AngleSurfaceManager()
     : egl_config_(nullptr),
       egl_display_(EGL_NO_DISPLAY),
-      egl_context_(EGL_NO_CONTEXT),
-      current_render_target_(target) {
+      egl_context_(EGL_NO_CONTEXT) {
   initialize_succeeded_ = Initialize();
 }
 
@@ -170,10 +169,6 @@ void AngleSurfaceManager::CleanUp() {
   }
 }
 
-bool AngleSurfaceManager::CreateSurface(EGLint width, EGLint height) {
-  return CreateSurface(current_render_target_, width, height);
-}
-
 bool AngleSurfaceManager::CreateSurface(WindowsRenderTarget* render_target,
                                         EGLint width,
                                         EGLint height) {
@@ -203,15 +198,24 @@ bool AngleSurfaceManager::CreateSurface(WindowsRenderTarget* render_target,
   return true;
 }
 
-bool AngleSurfaceManager::ResizeSurface(EGLint width, EGLint height) {
+void AngleSurfaceManager::ResizeSurface(WindowsRenderTarget* render_target,
+                                        EGLint width,
+                                        EGLint height) {
   EGLint existing_width, existing_height;
   GetSurfaceDimensions(&existing_width, &existing_height);
   if (width != existing_width || height != existing_height) {
-    // This resize approach could be further optimized if Angle exposed a public entrypoint for SwapChain11::reset or SwapChain11::resize
+    // Destroy existing surface with previous stale dimensions and create new
+    // surface at new size. Since the Windows compositor retains the front
+    // buffer until the new surface has been presented, no need to manually
+    // preserve the previous surface contents. This resize approach could be
+    // further optimized if Angle exposed a public entrypoint for
+    // SwapChain11::reset or SwapChain11::resize.
     DestroySurface();
-    return CreateSurface(width, height);
+    if (!CreateSurface(render_target, width, height)) {
+      std::cerr << "AngleSurfaceManager::ResizeSurface failed to create surface"
+                << std::endl;
+    }
   }
-  return false;
 }
 
 void AngleSurfaceManager::GetSurfaceDimensions(EGLint* width, EGLint* height) {

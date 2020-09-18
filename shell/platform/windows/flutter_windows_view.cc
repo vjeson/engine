@@ -10,15 +10,14 @@ namespace flutter {
 
 FlutterWindowsView::FlutterWindowsView(
     std::unique_ptr<WindowBindingHandler> window_binding) {
+  surface_manager_ = std::make_unique<AngleSurfaceManager>();
+
   // Take the binding handler, and give it a pointer back to self.
   binding_handler_ = std::move(window_binding);
+  binding_handler_->SetView(this);
+
   render_target_ = std::make_unique<WindowsRenderTarget>(
       binding_handler_->GetRenderTarget());
-
-  surface_manager_ =
-      std::make_unique<AngleSurfaceManager>(render_target_.get());
-
-  binding_handler_->SetView(this);
 }
 
 FlutterWindowsView::~FlutterWindowsView() {
@@ -53,7 +52,7 @@ void FlutterWindowsView::SetEngine(
 
 void FlutterWindowsView::OnWindowSizeChanged(size_t width,
                                              size_t height) const {
-  surface_manager_->ResizeSurface(width, height);
+  surface_manager_->ResizeSurface(GetRenderTarget(), width, height);
   SendWindowMetrics(width, height, binding_handler_->GetDpiScale());
 }
 
@@ -106,13 +105,6 @@ void FlutterWindowsView::OnScroll(double x,
   SendScroll(x, y, delta_x, delta_y, scroll_offset_multiplier);
 }
 
-void FlutterWindowsView::OnFontChange() {
-  if (engine_->engine() == nullptr) {
-    return;
-  }
-  FlutterEngineReloadSystemFonts(engine_->engine());
-}
-
 // Sends new size  information to FlutterEngine.
 void FlutterWindowsView::SendWindowMetrics(size_t width,
                                            size_t height,
@@ -130,7 +122,6 @@ void FlutterWindowsView::SendWindowMetrics(size_t width,
 }
 
 void FlutterWindowsView::SendInitialBounds() {
-  // Initial bounds must be sent after engine has initialized
   PhysicalWindowBounds bounds = binding_handler_->GetPhysicalWindowBounds();
 
   SendWindowMetrics(bounds.width, bounds.height,
@@ -274,7 +265,8 @@ bool FlutterWindowsView::SwapBuffers() {
 
 void FlutterWindowsView::CreateRenderSurface() {
   PhysicalWindowBounds bounds = binding_handler_->GetPhysicalWindowBounds();
-  surface_manager_->CreateSurface(bounds.width, bounds.height);
+  surface_manager_->CreateSurface(GetRenderTarget(), bounds.width,
+                                  bounds.height);
 }
 
 void FlutterWindowsView::DestroyRenderSurface() {
@@ -283,7 +275,7 @@ void FlutterWindowsView::DestroyRenderSurface() {
   }
 }
 
-WindowsRenderTarget* FlutterWindowsView::GetRenderTarget() {
+WindowsRenderTarget* FlutterWindowsView::GetRenderTarget() const {
   return render_target_.get();
 }
 
