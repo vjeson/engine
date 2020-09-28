@@ -35,6 +35,7 @@ core_cpp_client_wrapper_internal_headers =
     get_path_info([
                     "binary_messenger_impl.h",
                     "byte_buffer_streams.h",
+                    "texture_registrar_impl.h",
                   ],
                   "abspath")
 
