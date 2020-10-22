@@ -1538,6 +1538,15 @@ FlutterEngineResult FlutterEngineMarkExternalTextureFrameAvailable(
   if (texture_identifier == 0) {
     return LOG_EMBEDDER_ERROR(kInvalidArguments, "Invalid texture identifier.");
   }
+  
+  // reinterpret_cast<flutter::EmbedderEngine*>(engine)->PostTaskOnEngineManagedNativeThreads([&](FlutterNativeThreadType kFlutterNativeThreadTypeUI){
+  //   if (!reinterpret_cast<flutter::EmbedderEngine*>(engine)
+  //           ->MarkTextureFrameAvailable(texture_identifier)) {
+  //     LOG_EMBEDDER_ERROR(
+  //         kInternalInconsistency,
+  //         "Could not mark the texture frame as being available.");
+  //   }
+  // });
   if (!reinterpret_cast<flutter::EmbedderEngine*>(engine)
            ->MarkTextureFrameAvailable(texture_identifier)) {
     return LOG_EMBEDDER_ERROR(

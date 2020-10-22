@@ -19,6 +19,7 @@
 #include "binary_messenger_impl.h"
 #include "include/flutter/engine_method_result.h"
 #include "texture_registrar_impl.h"
+#include "flutter_texture_registrar.h"
 
 namespace flutter {
 
