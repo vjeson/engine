@@ -1,4 +1,4 @@
-Signature: 6903c7229abcc54592dfa2c285bd240d
+Signature: 30003fe88a97a302f073372b27d095b3
 
 UNUSED LICENSES:
 
@@ -923,9 +923,13 @@ FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/wchar.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/wctype.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/wordexp.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/exception.h
+FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/hw/debug/arm64.h
+FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/hw/debug/x86.h
+FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/lookup.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/syscalls/clock.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/syscalls/internal/cdecls.inc
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/syscalls/scheduler.h
+FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/utc.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/lib/Scrt1.o
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/lib/libc.so
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/lib/libdl.so
@@ -1130,9 +1134,13 @@ FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/wchar.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/wctype.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/wordexp.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/exception.h
+FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/hw/debug/arm64.h
+FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/hw/debug/x86.h
+FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/lookup.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/syscalls/clock.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/syscalls/internal/cdecls.inc
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/syscalls/scheduler.h
+FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/utc.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/Scrt1.o
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libc.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libdl.so
@@ -2475,8 +2483,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ====================================================================================================
 LIBRARY: fuchsia_sdk
-ORIGIN: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/driver-config.h + ../../../fuchsia/sdk/linux/LICENSE
+ORIGIN: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/bootfs.h + ../../../fuchsia/sdk/linux/LICENSE
 TYPE: LicenseType.bsd
+FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/bootfs.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/driver-config.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/image.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/sysconfig.h
@@ -2488,6 +2497,7 @@ FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/limits.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/syscalls/smc.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/threads.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/time.h
+FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/boot/bootfs.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/boot/driver-config.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/boot/image.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/boot/sysconfig.h
@@ -2508,6 +2518,7 @@ FILE: ../../../fuchsia/sdk/linux/dart/fidl/lib/src/message.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fidl/lib/src/struct.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fidl/lib/src/table.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fidl/lib/src/types.dart
+FILE: ../../../fuchsia/sdk/linux/dart/fidl/lib/src/unknown_data.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fuchsia/lib/src/fakes/fuchsia_fakes.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_logger/lib/logger.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_logger/lib/src/internal/_fuchsia_log_writer.dart
@@ -2999,7 +3010,6 @@ TYPE: LicenseType.bsd
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/assert.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/netboot.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/compiler.h
-FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/driver/binding.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/errors.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/hw/i2c.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/hw/usb.h
@@ -3025,7 +3035,6 @@ FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/types.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/assert.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/boot/netboot.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/compiler.h
-FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/driver/binding.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/errors.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/hw/i2c.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/hw/usb.h
@@ -3141,17 +3150,13 @@ FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/string_view.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/testonly-syscalls.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/string_view.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/testonly-syscalls.h
-FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_modular/lib/src/module/internal/_view_provider_impl.dart
-FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_modular/lib/src/module/noop_view_provider.dart
-FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_modular/lib/src/module/view_provider.dart
-FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_modular_testing/lib/src/module_interceptor.dart
-FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_modular_testing/lib/src/module_with_view_provider_impl.dart
 FILE: ../../../fuchsia/sdk/linux/dart/fuchsia_scenic_flutter/lib/src/child_view_render_box_2.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/component.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/device.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/diagnostics.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/feedback_data_provider.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/power.dart
+FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/proxy.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/repository_manager.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/tiles.dart
 FILE: ../../../fuchsia/sdk/linux/dart/sl4f/lib/src/time.dart
@@ -3207,6 +3212,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net/socket.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix/error.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings.policy/error.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings.policy/volume_policy.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/factory_reset.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/input.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/light.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/night_mode.fidl
@@ -3228,6 +3234,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/common.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/weavestack.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedconfiguration/wlan_deprecated_configuration.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/zx/zx_common.fidl
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/handle_close_many.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/include/lib/fidl/trace.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/validate_string.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/internal/bitset.h

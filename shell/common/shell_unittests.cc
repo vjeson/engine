@@ -1,7 +1,6 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// FLUTTER_NOLINT
 
 #define FML_USED_ON_EMBEDDER
 
@@ -317,6 +316,8 @@ TEST_F(ShellTest, AllowedDartVMFlag) {
   std::vector<const char*> flags = {
       "--enable-isolate-groups",
       "--no-enable-isolate-groups",
+      "--lazy_async_stacks",
+      "--no-causal_async_stacks",
   };
 #if !FLUTTER_RELEASE
   flags.push_back("--max_profile_depth 1");
@@ -1327,7 +1328,7 @@ TEST_F(ShellTest, WaitForFirstFrameInlined) {
   DestroyShell(std::move(shell), std::move(task_runners));
 }
 
-static size_t GetRasterizerResourceCacheBytesSync(Shell& shell) {
+static size_t GetRasterizerResourceCacheBytesSync(const Shell& shell) {
   size_t bytes = 0;
   fml::AutoResetWaitableEvent latch;
   fml::TaskRunner::RunNowOrPostTask(
@@ -2133,6 +2134,78 @@ TEST_F(ShellTest, IgnoresInvalidMetrics) {
   ASSERT_EQ(last_height, 300.0);
 
   DestroyShell(std::move(shell), std::move(task_runners));
+}
+
+TEST_F(ShellTest, OnServiceProtocolSetAssetBundlePathWorks) {
+  Settings settings = CreateSettingsForFixture();
+  std::unique_ptr<Shell> shell = CreateShell(settings);
+  RunConfiguration configuration =
+      RunConfiguration::InferFromSettings(settings);
+  configuration.SetEntrypoint("canAccessResourceFromAssetDir");
+
+  // Verify isolate can load a known resource with the
+  // default asset directory - kernel_blob.bin
+  fml::AutoResetWaitableEvent latch;
+
+  // Callback used to signal whether the resource was loaded successfully.
+  bool can_access_resource = false;
+  auto native_can_access_resource = [&can_access_resource,
+                                     &latch](Dart_NativeArguments args) {
+    Dart_Handle exception = nullptr;
+    can_access_resource =
+        tonic::DartConverter<bool>::FromArguments(args, 0, exception);
+    latch.Signal();
+  };
+  AddNativeCallback("NotifyCanAccessResource",
+                    CREATE_NATIVE_ENTRY(native_can_access_resource));
+
+  // Callback used to delay the asset load until after the service
+  // protocol method has finished.
+  auto native_notify_set_asset_bundle_path =
+      [&shell](Dart_NativeArguments args) {
+        // Update the asset directory to a bonus path.
+        ServiceProtocol::Handler::ServiceProtocolMap params;
+        params["assetDirectory"] = "assetDirectory";
+        rapidjson::Document document;
+        OnServiceProtocol(shell.get(), ServiceProtocolEnum::kSetAssetBundlePath,
+                          shell->GetTaskRunners().GetUITaskRunner(), params,
+                          &document);
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        document.Accept(writer);
+      };
+  AddNativeCallback("NotifySetAssetBundlePath",
+                    CREATE_NATIVE_ENTRY(native_notify_set_asset_bundle_path));
+
+  RunEngine(shell.get(), std::move(configuration));
+
+  latch.Wait();
+  ASSERT_TRUE(can_access_resource);
+
+  DestroyShell(std::move(shell));
+}
+
+TEST_F(ShellTest, EngineRootIsolateLaunchesDontTakeVMDataSettings) {
+  ASSERT_FALSE(DartVMRef::IsInstanceRunning());
+  // Make sure the shell launch does not kick off the creation of the VM
+  // instance by already creating one upfront.
+  auto vm_settings = CreateSettingsForFixture();
+  auto vm_ref = DartVMRef::Create(vm_settings);
+  ASSERT_TRUE(DartVMRef::IsInstanceRunning());
+
+  auto settings = vm_settings;
+  fml::AutoResetWaitableEvent isolate_create_latch;
+  settings.root_isolate_create_callback = [&](const auto& isolate) {
+    isolate_create_latch.Signal();
+  };
+  auto shell = CreateShell(settings);
+  ASSERT_TRUE(ValidateShell(shell.get()));
+  auto configuration = RunConfiguration::InferFromSettings(settings);
+  ASSERT_TRUE(configuration.IsValid());
+  RunEngine(shell.get(), std::move(configuration));
+  ASSERT_TRUE(DartVMRef::IsInstanceRunning());
+  DestroyShell(std::move(shell));
+  isolate_create_latch.Wait();
 }
 
 }  // namespace testing

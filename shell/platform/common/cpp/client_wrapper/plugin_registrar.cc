@@ -27,10 +27,20 @@ PluginRegistrar::PluginRegistrar(FlutterDesktopPluginRegistrarRef registrar)
       std::make_unique<TextureRegistrarImpl>(texture_registrar);
 }
 
-PluginRegistrar::~PluginRegistrar() {}
+PluginRegistrar::~PluginRegistrar() {
+  // This must always be the first call.
+  ClearPlugins();
+
+  // Explicitly cleared to facilitate testing of destruction order.
+  messenger_.reset();
+}
 
 void PluginRegistrar::AddPlugin(std::unique_ptr<Plugin> plugin) {
   plugins_.insert(std::move(plugin));
+}
+
+void PluginRegistrar::ClearPlugins() {
+  plugins_.clear();
 }
 
 // ===== PluginRegistrarManager =====
