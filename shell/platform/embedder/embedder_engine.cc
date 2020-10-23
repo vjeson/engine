@@ -186,18 +186,18 @@ bool EmbedderEngine::MarkTextureFrameAvailable(int64_t texture) {
   if (!IsValid() || !external_texture_callback_) {
     return false;
   }
-<<<<<<< HEAD
+  
   fml::TaskRunner::RunNowOrPostTask(task_runners_.GetPlatformTaskRunner(),
                                     [&] {
                                       shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
                                     });
 
   // shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
-=======
+
   shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
 #endif
 
->>>>>>> remotes/origin/master
+
   return true;
 }
 
