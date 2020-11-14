@@ -192,9 +192,9 @@ bool EmbedderEngine::MarkTextureFrameAvailable(int64_t texture) {
                                       shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
                                     });
 
-  // shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
+   //shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
 
-  shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
+  // shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
 #endif
 
 
