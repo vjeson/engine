@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart = 2.10
+// @dart = 2.12
 part of engine;
 
 /// Instantiates a [ui.Codec] backed by an `SkAnimatedImage` from Skia.
@@ -15,51 +15,79 @@ void skiaInstantiateImageCodec(Uint8List list, Callback<ui.Codec> callback,
   callback(codec);
 }
 
-/// Instantiates a [ui.Codec] backed by an `SkAnimatedImage` from Skia after requesting from URI.
-void skiaInstantiateWebImageCodec(String src, Callback<ui.Codec> callback,
-    WebOnlyImageCodecChunkCallback? chunkCallback) {
-  chunkCallback?.call(0, 100);
+/// Instantiates a [ui.Codec] backed by an `SkAnimatedImage` from Skia after
+/// requesting from URI.
+Future<ui.Codec> skiaInstantiateWebImageCodec(
+    String src, WebOnlyImageCodecChunkCallback? chunkCallback) {
+  Completer<ui.Codec> completer = Completer<ui.Codec>();
   //TODO: Switch to using MakeImageFromCanvasImageSource when animated images are supported.
-  html.HttpRequest.request(
-    src,
-    responseType: "arraybuffer",
-  ).then((html.HttpRequest response) {
-    chunkCallback?.call(100, 100);
+  html.HttpRequest.request(src, responseType: "arraybuffer",
+      onProgress: (html.ProgressEvent event) {
+    if (event.lengthComputable) {
+      chunkCallback?.call(event.loaded!, event.total!);
+    }
+  }).then((html.HttpRequest response) {
+    if (response.status != 200) {
+      completer.completeError(Exception(
+          'Network image request failed with status: ${response.status}'));
+    }
     final Uint8List list =
         new Uint8List.view((response.response as ByteBuffer));
     final SkAnimatedImage skAnimatedImage =
         canvasKit.MakeAnimatedImageFromEncoded(list);
     final CkAnimatedImage animatedImage = CkAnimatedImage(skAnimatedImage);
     final CkAnimatedImageCodec codec = CkAnimatedImageCodec(animatedImage);
-    callback(codec);
+    completer.complete(codec);
+  }, onError: (dynamic error) {
+    completer.completeError(error);
   });
+  return completer.future;
 }
 
 /// A wrapper for `SkAnimatedImage`.
 class CkAnimatedImage implements ui.Image {
-  final SkAnimatedImage _skAnimatedImage;
-
   // Use a box because `SkImage` may be deleted either due to this object
   // being garbage-collected, or by an explicit call to [delete].
-  late final SkiaObjectBox box;
+  late final SkiaObjectBox<SkAnimatedImage> box;
 
-  CkAnimatedImage(this._skAnimatedImage) {
-    box = SkiaObjectBox(this, _skAnimatedImage as SkDeletable);
+  SkAnimatedImage get _skAnimatedImage => box.skObject;
+
+  CkAnimatedImage(SkAnimatedImage skAnimatedImage) {
+    box = SkiaObjectBox<SkAnimatedImage>(this, skAnimatedImage);
   }
 
+  CkAnimatedImage.cloneOf(SkiaObjectBox<SkAnimatedImage> boxToClone) {
+    box = boxToClone.clone(this);
+  }
+
+  bool _disposed = false;
   @override
   void dispose() {
     box.delete();
+    _disposed = true;
   }
 
   @override
-  ui.Image clone() => this;
+  bool get debugDisposed {
+    if (assertionsEnabled) {
+      return _disposed;
+    }
+    throw StateError(
+        'Image.debugDisposed is only available when asserts are enabled.');
+  }
+
+  ui.Image clone() => CkAnimatedImage.cloneOf(box);
 
   @override
-  bool isCloneOf(ui.Image other) => other == this;
+  bool isCloneOf(ui.Image other) {
+    return other is CkAnimatedImage &&
+        other._skAnimatedImage.isAliasOf(_skAnimatedImage);
+  }
 
   @override
-  List<StackTrace>? debugGetOpenHandleStackTraces() => null;
+  List<StackTrace>? debugGetOpenHandleStackTraces() =>
+      box.debugGetStackTraces();
+
   int get frameCount => _skAnimatedImage.getFrameCount();
 
   /// Decodes the next frame and returns the frame duration.
@@ -95,9 +123,10 @@ class CkAnimatedImage implements ui.Image {
       );
       bytes = _skAnimatedImage.readPixels(imageInfo, 0, 0);
     } else {
-      final SkData skData = _skAnimatedImage.encodeToData(); //defaults to PNG 100%
-      // make a copy that we can return
-      bytes = Uint8List.fromList(canvasKit.getSkDataBytes(skData));
+      // Defaults to PNG 100%.
+      final SkData skData = _skAnimatedImage.encodeToData();
+      // Make a copy that we can return.
+      bytes = Uint8List.fromList(canvasKit.getDataBytes(skData));
     }
 
     final ByteData data = bytes.buffer.asByteData(0, bytes.length);
@@ -110,29 +139,50 @@ class CkAnimatedImage implements ui.Image {
 
 /// A [ui.Image] backed by an `SkImage` from Skia.
 class CkImage implements ui.Image {
-  final SkImage skImage;
-
   // Use a box because `SkImage` may be deleted either due to this object
   // being garbage-collected, or by an explicit call to [delete].
-  late final SkiaObjectBox box;
+  late final SkiaObjectBox<SkImage> box;
 
-  CkImage(this.skImage) {
-    box = SkiaObjectBox(this, skImage as SkDeletable);
+  SkImage get skImage => box.skObject;
+
+  CkImage(SkImage skImage) {
+    box = SkiaObjectBox<SkImage>(this, skImage);
   }
 
+  CkImage.cloneOf(SkiaObjectBox<SkImage> boxToClone) {
+    box = boxToClone.clone(this);
+  }
+
+  bool _disposed = false;
   @override
   void dispose() {
     box.delete();
+    assert(() {
+      _disposed = true;
+      return true;
+    }());
   }
 
   @override
-  ui.Image clone() => this;
+  bool get debugDisposed {
+    if (assertionsEnabled) {
+      return _disposed;
+    }
+    throw StateError(
+        'Image.debugDisposed is only available when asserts are enabled.');
+  }
 
   @override
-  bool isCloneOf(ui.Image other) => other == this;
+  ui.Image clone() => CkImage.cloneOf(box);
 
   @override
-  List<StackTrace>? debugGetOpenHandleStackTraces() => null;
+  bool isCloneOf(ui.Image other) {
+    return other is CkImage && other.skImage.isAliasOf(skImage);
+  }
+
+  @override
+  List<StackTrace>? debugGetOpenHandleStackTraces() =>
+      box.debugGetStackTraces();
 
   @override
   int get width => skImage.width();
@@ -157,7 +207,7 @@ class CkImage implements ui.Image {
     } else {
       final SkData skData = skImage.encodeToData(); //defaults to PNG 100%
       // make a copy that we can return
-      bytes = Uint8List.fromList(canvasKit.getSkDataBytes(skData));
+      bytes = Uint8List.fromList(canvasKit.getDataBytes(skData));
     }
 
     final ByteData data = bytes.buffer.asByteData(0, bytes.length);

@@ -14,10 +14,13 @@ import android.view.HapticFeedbackConstants;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import io.flutter.Log;
 import io.flutter.embedding.engine.systemchannels.PlatformChannel;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /** Android implementation of the platform plugin. */
@@ -29,6 +32,7 @@ public class PlatformPlugin {
   private final PlatformChannel platformChannel;
   private PlatformChannel.SystemChromeStyle currentTheme;
   private int mEnabledOverlays;
+  private static final String TAG = "PlatformPlugin";
 
   @VisibleForTesting
   final PlatformChannel.PlatformMessageHandler mPlatformMessageHandler =
@@ -265,9 +269,10 @@ public class PlatformPlugin {
         window.setStatusBarColor(systemChromeStyle.statusBarColor);
       }
     }
-    if (systemChromeStyle.systemNavigationBarDividerColor != null) {
-      // Not available until Android P.
-      // window.setNavigationBarDividerColor(systemNavigationBarDividerColor);
+    if (systemChromeStyle.systemNavigationBarDividerColor != null && Build.VERSION.SDK_INT >= 28) {
+      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+      window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+      window.setNavigationBarDividerColor(systemChromeStyle.systemNavigationBarDividerColor);
     }
     view.setSystemUiVisibility(flags);
     currentTheme = systemChromeStyle;
@@ -283,11 +288,25 @@ public class PlatformPlugin {
 
     if (!clipboard.hasPrimaryClip()) return null;
 
-    ClipData clip = clipboard.getPrimaryClip();
-    if (clip == null) return null;
-
-    if (format == null || format == PlatformChannel.ClipboardContentFormat.PLAIN_TEXT) {
-      return clip.getItemAt(0).coerceToText(activity);
+    try {
+      ClipData clip = clipboard.getPrimaryClip();
+      if (clip == null) return null;
+      if (format == null || format == PlatformChannel.ClipboardContentFormat.PLAIN_TEXT) {
+        ClipData.Item item = clip.getItemAt(0);
+        if (item.getUri() != null)
+          activity.getContentResolver().openTypedAssetFileDescriptor(item.getUri(), "text/*", null);
+        return item.coerceToText(activity);
+      }
+    } catch (SecurityException e) {
+      Log.w(
+          TAG,
+          "Attempted to get clipboard data that requires additional permission(s).\n"
+              + "See the exception details for which permission(s) are required, and consider adding them to your Android Manifest as described in:\n"
+              + "https://developer.android.com/guide/topics/permissions/overview",
+          e);
+      return null;
+    } catch (FileNotFoundException e) {
+      return null;
     }
 
     return null;

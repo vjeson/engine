@@ -222,8 +222,8 @@ def to_gn_args(args):
       gn_args['use_goma'] = False
       gn_args['goma_dir'] = None
 
-    # Enable Metal on non-simulator iOS builds.
-    if args.target_os == 'ios' and not args.simulator:
+    # Enable Metal on iOS builds.
+    if args.target_os == 'ios':
       gn_args['skia_use_metal'] = True
       gn_args['shell_enable_metal'] = True
       # Bitcode enabled builds using the current version of the toolchain leak
@@ -237,10 +237,12 @@ def to_gn_args(args):
       # Configure Skia for Vulkan support.
       gn_args['skia_use_vulkan'] = True
 
-    # The buildroot currently isn't set up to support Vulkan in the
-    # Windows ANGLE build, so disable it regardless of enable_vulkan's value.
     if sys.platform.startswith(('cygwin', 'win')):
-       gn_args['angle_enable_vulkan'] = False
+      # The buildroot currently isn't set up to support Vulkan in the
+      # Windows ANGLE build, so disable it regardless of enable_vulkan's value.
+      gn_args['angle_enable_vulkan'] = False
+      # Don't build unnecessary portions of the ANGLE tree.
+      gn_args['angle_build_all'] = False
 
     # We should not need a special case for x86, but this seems to introduce text relocations
     # even with -fPIC everywhere.
@@ -398,6 +400,8 @@ def main(argv):
   elif sys.platform == 'darwin':
     # On the Mac, generate an Xcode project by default.
     command.append('--ide=xcode')
+    command.append('--xcode-project=flutter_engine')
+    command.append('--xcode-build-system=new')
   elif sys.platform.startswith('win'):
     # On Windows, generate a Visual Studio project.
     command.append('--ide=vs')

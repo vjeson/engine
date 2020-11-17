@@ -88,6 +88,7 @@ struct FlutterPlatformViewLayer {
 class FlutterPlatformViewLayerPool {
  public:
   FlutterPlatformViewLayerPool() = default;
+
   ~FlutterPlatformViewLayerPool() = default;
 
   // Gets a layer from the pool if available, or allocates a new one.
@@ -205,8 +206,8 @@ class FlutterPlatformViewsController {
   std::map<std::string, fml::scoped_nsobject<NSObject<FlutterPlatformViewFactory>>> factories_;
   std::map<int64_t, fml::scoped_nsobject<NSObject<FlutterPlatformView>>> views_;
   std::map<int64_t, fml::scoped_nsobject<FlutterTouchInterceptingView>> touch_interceptors_;
-  // Mapping a platform view ID to the top most parent view (root_view) who is a direct child to
-  // the `flutter_view_`.
+  // Mapping a platform view ID to the top most parent view (root_view) of a platform view. In
+  // |SubmitFrame|, root_views_ are added to flutter_view_ as child views.
   //
   // The platform view with the view ID is a child of the root view; If the platform view is not
   // clipped, and no clipping view is added, the root view will be the intercepting view.
@@ -244,6 +245,8 @@ class FlutterPlatformViewsController {
       gesture_recognizers_blocking_policies;
 
   std::unique_ptr<fml::WeakPtrFactory<FlutterPlatformViewsController>> weak_factory_;
+
+  bool catransaction_added_ = false;
 
   void OnCreate(FlutterMethodCall* call, FlutterResult& result);
   void OnDispose(FlutterMethodCall* call, FlutterResult& result);
@@ -293,6 +296,13 @@ class FlutterPlatformViewsController {
   // Appends the overlay views and platform view and sets their z index based on the composition
   // order.
   void BringLayersIntoView(LayersMap layer_map);
+
+  // Begin a CATransaction.
+  // This transaction needs to be balanced with |CommitCATransactionIfNeeded|.
+  void BeginCATransaction();
+
+  // Commit a CATransaction if |BeginCATransaction| has been called during the frame.
+  void CommitCATransactionIfNeeded();
 
   FML_DISALLOW_COPY_AND_ASSIGN(FlutterPlatformViewsController);
 };

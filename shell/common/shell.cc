@@ -1,7 +1,6 @@
 // Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-// FLUTTER_NOLINT
 
 #define RAPIDJSON_HAS_STDSTRING 1
 #include "flutter/shell/common/shell.h"
@@ -11,6 +10,7 @@
 #include <vector>
 
 #include "flutter/assets/directory_asset_bundle.h"
+#include "flutter/common/graphics/persistent_cache.h"
 #include "flutter/fml/file.h"
 #include "flutter/fml/icu_util.h"
 #include "flutter/fml/log_settings.h"
@@ -22,7 +22,6 @@
 #include "flutter/fml/unique_fd.h"
 #include "flutter/runtime/dart_vm.h"
 #include "flutter/shell/common/engine.h"
-#include "flutter/shell/common/persistent_cache.h"
 #include "flutter/shell/common/skia_event_tracer_impl.h"
 #include "flutter/shell/common/switches.h"
 #include "flutter/shell/common/vsync_waiter.h"
@@ -548,6 +547,10 @@ bool Shell::Setup(std::unique_ptr<PlatformView> platform_view,
   rasterizer_ = std::move(rasterizer);
   io_manager_ = std::move(io_manager);
 
+  // Set the external view embedder for the rasterizer.
+  auto view_embedder = platform_view_->CreateExternalViewEmbedder();
+  rasterizer_->SetExternalViewEmbedder(view_embedder);
+
   // The weak ptr must be generated in the platform thread which owns the unique
   // ptr.
   weak_engine_ = engine_->GetWeakPtr();
@@ -563,8 +566,6 @@ bool Shell::Setup(std::unique_ptr<PlatformView> platform_view,
                                     });
 
   is_setup_ = true;
-
-  vm_->GetServiceProtocol()->AddHandler(this, GetServiceProtocolDescription());
 
   PersistentCache::GetCacheForProcess()->AddWorkerTaskRunner(
       task_runners_.GetIOTaskRunner());
@@ -1151,6 +1152,23 @@ void Shell::OnPreEngineRestart() {
 }
 
 // |Engine::Delegate|
+void Shell::OnRootIsolateCreated() {
+  if (is_added_to_service_protocol_) {
+    return;
+  }
+  auto description = GetServiceProtocolDescription();
+  fml::TaskRunner::RunNowOrPostTask(
+      task_runners_.GetPlatformTaskRunner(),
+      [self = weak_factory_.GetWeakPtr(),
+       description = std::move(description)]() {
+        if (self) {
+          self->vm_->GetServiceProtocol()->AddHandler(self.get(), description);
+        }
+      });
+  is_added_to_service_protocol_ = true;
+}
+
+// |Engine::Delegate|
 void Shell::UpdateIsolateDescription(const std::string isolate_name,
                                      int64_t isolate_port) {
   Handler::Description description(isolate_port, isolate_name);
@@ -1163,13 +1181,6 @@ void Shell::SetNeedsReportTimings(bool value) {
 
 // |Engine::Delegate|
 std::unique_ptr<std::vector<std::string>> Shell::ComputePlatformResolvedLocale(
-    const std::vector<std::string>& supported_locale_data) {
-  return ComputePlatformViewResolvedLocale(supported_locale_data);
-}
-
-// |PlatformView::Delegate|
-std::unique_ptr<std::vector<std::string>>
-Shell::ComputePlatformViewResolvedLocale(
     const std::vector<std::string>& supported_locale_data) {
   return platform_view_->ComputePlatformResolvedLocales(supported_locale_data);
 }
@@ -1295,9 +1306,15 @@ bool Shell::HandleServiceProtocolMessage(
 // |ServiceProtocol::Handler|
 ServiceProtocol::Handler::Description Shell::GetServiceProtocolDescription()
     const {
+  FML_DCHECK(task_runners_.GetUITaskRunner()->RunsTasksOnCurrentThread());
+
+  if (!weak_engine_) {
+    return ServiceProtocol::Handler::Description();
+  }
+
   return {
-      engine_->GetUIIsolateMainPort(),
-      engine_->GetUIIsolateName(),
+      weak_engine_->GetUIIsolateMainPort(),
+      weak_engine_->GetUIIsolateName(),
   };
 }
 
@@ -1401,9 +1418,21 @@ bool Shell::OnServiceProtocolRunInView(
   configuration.SetEntrypointAndLibrary(engine_->GetLastEntrypoint(),
                                         engine_->GetLastEntrypointLibrary());
 
-  configuration.AddAssetResolver(
-      std::make_unique<DirectoryAssetBundle>(fml::OpenDirectory(
-          asset_directory_path.c_str(), false, fml::FilePermission::kRead)));
+  configuration.AddAssetResolver(std::make_unique<DirectoryAssetBundle>(
+      fml::OpenDirectory(asset_directory_path.c_str(), false,
+                         fml::FilePermission::kRead),
+      false));
+
+  // Preserve any original asset resolvers to avoid syncing unchanged assets
+  // over the DevFS connection.
+  auto old_asset_manager = engine_->GetAssetManager();
+  if (old_asset_manager != nullptr) {
+    for (auto& old_resolver : old_asset_manager->TakeResolvers()) {
+      if (old_resolver->IsValidAfterAssetManagerChange()) {
+        configuration.AddAssetResolver(std::move(old_resolver));
+      }
+    }
+  }
 
   auto& allocator = response->GetAllocator();
   response->SetObject();
@@ -1518,7 +1547,19 @@ bool Shell::OnServiceProtocolSetAssetBundlePath(
 
   asset_manager->PushFront(std::make_unique<DirectoryAssetBundle>(
       fml::OpenDirectory(params.at("assetDirectory").data(), false,
-                         fml::FilePermission::kRead)));
+                         fml::FilePermission::kRead),
+      false));
+
+  // Preserve any original asset resolvers to avoid syncing unchanged assets
+  // over the DevFS connection.
+  auto old_asset_manager = engine_->GetAssetManager();
+  if (old_asset_manager != nullptr) {
+    for (auto& old_resolver : old_asset_manager->TakeResolvers()) {
+      if (old_resolver->IsValidAfterAssetManagerChange()) {
+        asset_manager->PushBack(std::move(old_resolver));
+      }
+    }
+  }
 
   if (engine_->UpdateAssetManager(std::move(asset_manager))) {
     response->AddMember("type", "Success", allocator);

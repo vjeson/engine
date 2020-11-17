@@ -12,6 +12,7 @@
 #include "flutter/shell/platform/android/context/android_context.h"
 #include "flutter/shell/platform/android/external_view_embedder/surface_pool.h"
 #include "flutter/shell/platform/android/jni/platform_view_android_jni.h"
+#include "flutter/shell/platform/android/surface/android_surface.h"
 #include "third_party/skia/include/core/SkPictureRecorder.h"
 
 namespace flutter {
@@ -29,9 +30,9 @@ namespace flutter {
 class AndroidExternalViewEmbedder final : public ExternalViewEmbedder {
  public:
   AndroidExternalViewEmbedder(
-      std::shared_ptr<AndroidContext> android_context,
+      const AndroidContext& android_context,
       std::shared_ptr<PlatformViewAndroidJNI> jni_facade,
-      const AndroidSurface::Factory& surface_factory);
+      std::shared_ptr<AndroidSurfaceFactory> surface_factory);
 
   // |ExternalViewEmbedder|
   void PrerollCompositeEmbeddedView(
@@ -87,13 +88,13 @@ class AndroidExternalViewEmbedder final : public ExternalViewEmbedder {
   static const int kDefaultMergedLeaseDuration = 10;
 
   // Provides metadata to the Android surfaces.
-  const std::shared_ptr<AndroidContext> android_context_;
+  const AndroidContext& android_context_;
 
   // Allows to call methods in Java.
   const std::shared_ptr<PlatformViewAndroidJNI> jni_facade_;
 
   // Allows to create surfaces.
-  const AndroidSurface::Factory surface_factory_;
+  const std::shared_ptr<AndroidSurfaceFactory> surface_factory_;
 
   // Holds surfaces. Allows to recycle surfaces or allocate new ones.
   const std::unique_ptr<SurfacePool> surface_pool_;
