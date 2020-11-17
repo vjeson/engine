@@ -268,7 +268,7 @@ FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
   return HandleForTextureRegistrar(registrar->engine->texture_registrar());
 }
 
-int64_t FlutterDesktopRegisterExternalTexture(
+int64_t FlutterDesktopTextureRegistrarRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     FlutterDesktopTextureCallback texture_callback,
     void* user_data) {
@@ -276,14 +276,14 @@ int64_t FlutterDesktopRegisterExternalTexture(
       ->RegisterTexture(texture_callback, user_data);
 }
 
-bool FlutterDesktopUnregisterExternalTexture(
+bool FlutterDesktopTextureRegistrarUnregisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {
   return TextureRegistrarFromHandle(texture_registrar)
       ->UnregisterTexture(texture_id);
 }
 
-bool FlutterDesktopMarkExternalTextureFrameAvailable(
+bool FlutterDesktopTextureRegistrarMarkExternalTextureFrameAvailable(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {
   return TextureRegistrarFromHandle(texture_registrar)

@@ -23,7 +23,7 @@ PluginRegistrar::PluginRegistrar(FlutterDesktopPluginRegistrarRef registrar)
 
   auto texture_registrar =
       FlutterDesktopRegistrarGetTextureRegistrar(registrar_);
-  textures_ =
+  texture_registrar_ =
       std::make_unique<TextureRegistrarImpl>(texture_registrar);
 }
 

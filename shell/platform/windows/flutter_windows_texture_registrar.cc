@@ -51,7 +51,7 @@ bool FlutterWindowsTextureRegistrar::PopulateTexture(
     FlutterOpenGLTexture* texture) {
   auto it = textures_.find(texture_id);
   if (it != textures_.end()) {
-    return it->second->PopulateTextureWithIdentifier(width, height, texture);
+    return it->second->PopulateTexture(width, height, texture);
   }
   return false;
 }

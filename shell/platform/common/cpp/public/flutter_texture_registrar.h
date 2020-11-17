@@ -14,11 +14,12 @@
 extern "C" {
 #endif
 
+struct FlutterDesktopTextureRegistrar;
 // Opaque reference to a texture registrar.
 typedef struct FlutterDesktopTextureRegistrar*
     FlutterDesktopTextureRegistrarRef;
 
-// An image buffer object
+// An image buffer object.
 typedef struct {
   // The pixel data buffer.
   const uint8_t* buffer;
@@ -37,21 +38,22 @@ typedef const FlutterDesktopPixelBuffer* (*FlutterDesktopTextureCallback)(
 
 // Registers a new texture with the Flutter engine and returns the texture ID,
 // The engine will use the |texture_callback|
-// function to copy the pixel buffer from the plugin caller.
-FLUTTER_EXPORT int64_t FlutterDesktopRegisterExternalTexture(
+// function to copy the pixel buffer from the caller.
+FLUTTER_EXPORT int64_t FlutterDesktopTextureRegistrarRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     FlutterDesktopTextureCallback texture_callback,
     void* user_data);
 
 // Unregisters an existing texture from the Flutter engine for a |texture_id|.
-// Returns true on success, false on failure.
-FLUTTER_EXPORT bool FlutterDesktopUnregisterExternalTexture(
+// Returns true on success or false if the specified texture doesn't exist.
+FLUTTER_EXPORT bool FlutterDesktopTextureRegistrarUnregisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id);
 
 // Marks that a new texture frame is available for a given |texture_id|.
-// Returns true on success, false on failure.
-FLUTTER_EXPORT bool FlutterDesktopMarkExternalTextureFrameAvailable(
+// Returns true on success or false if the specified texture doesn't exist.
+FLUTTER_EXPORT bool
+FlutterDesktopTextureRegistrarMarkExternalTextureFrameAvailable(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id);
 

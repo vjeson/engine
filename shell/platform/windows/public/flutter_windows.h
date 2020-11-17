@@ -155,6 +155,11 @@ FlutterDesktopEngineGetPluginRegistrar(FlutterDesktopEngineRef engine,
 FLUTTER_EXPORT FlutterDesktopMessengerRef
 FlutterDesktopEngineGetMessenger(FlutterDesktopEngineRef engine);
 
+// Returns the texture registrar associated with the engine.
+FLUTTER_EXPORT FlutterDesktopTextureRegistrarRef
+FlutterDesktopEngineGetTextureRegistrar(
+    FlutterDesktopTextureRegistrarRef texture_registrar);
+
 // ========== View ==========
 
 // Return backing HWND for manipulation in host application.

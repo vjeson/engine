@@ -16,7 +16,7 @@ namespace flutter {
 
 typedef struct ExternalTextureGLState ExternalTextureGLState;
 
-// An adaptation class of flutter engine and external texture interface.
+// An abstraction of an OpenGL texture.
 class ExternalTextureGL {
  public:
   ExternalTextureGL(FlutterDesktopTextureCallback texture_callback,
@@ -24,24 +24,26 @@ class ExternalTextureGL {
 
   virtual ~ExternalTextureGL();
 
-  /**
-   * Returns the unique id for the ExternalTextureGL instance.
-   */
+  // Returns the unique id of this texture.
   int64_t texture_id() { return reinterpret_cast<int64_t>(this); }
 
-  /**
-   * Accepts texture buffer copy request from the Flutter engine.
-   * When the user side marks the texture_id as available, the Flutter engine
-   * will callback to this method and ask for populate the |opengl_texture|
-   * object, such as the texture type and the format of the pixel buffer and the
-   * texture object.
-   * Returns true on success, false on failure.
-   */
-  bool PopulateTextureWithIdentifier(size_t width,
-                                     size_t height,
-                                     FlutterOpenGLTexture* opengl_texture);
+  // Attempts to populate the specified |opengl_texture| with texture details
+  // such as the name, width, height and the pixel format upon successfully
+  // copying the buffer provided by |texture_callback_|. See |CopyPixelBuffer|.
+  // Returns true on success or false if the pixel buffer could not be copied.
+  bool PopulateTexture(size_t width,
+                       size_t height,
+                       FlutterOpenGLTexture* opengl_texture);
 
  private:
+  // Attempts to copy the pixel buffer returned by |texture_callback_| to
+  // OpenGL.
+  // The |width| and |height| will be set to the actual bounds of the copied
+  // pixel buffer.
+  // Returns true on success or false if the pixel buffer returned
+  // by |texture_callback_| was invalid.
+  bool CopyPixelBuffer(size_t& width, size_t& height);
+
   std::unique_ptr<ExternalTextureGLState> state_;
   FlutterDesktopTextureCallback texture_callback_ = nullptr;
   void* user_data_ = nullptr;

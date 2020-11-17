@@ -22,8 +22,8 @@ class TextureRegistrarImpl : public TextureRegistrar {
   TextureRegistrarImpl& operator=(TextureRegistrarImpl const&) = delete;
 
   int64_t RegisterTexture(Texture* texture) override;
-  void MarkTextureFrameAvailable(int64_t texture_id) override;
-  void UnregisterTexture(int64_t texture_id) override;
+  bool MarkTextureFrameAvailable(int64_t texture_id) override;
+  bool UnregisterTexture(int64_t texture_id) override;
 
  private:
   // Handle for interacting with the C API.

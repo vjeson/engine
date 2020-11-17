@@ -44,7 +44,7 @@ class PluginRegistrar {
 
   // Returns the texture registrar to use for the plugin to render a pixel
   // buffer.
-  TextureRegistrar* textures() { return textures_.get(); }
+  TextureRegistrar* texture_registrar() { return texture_registrar_.get(); }
 
   // Takes ownership of |plugin|.
   //
@@ -67,7 +67,7 @@ class PluginRegistrar {
 
   std::unique_ptr<BinaryMessenger> messenger_;
 
-  std::unique_ptr<TextureRegistrar> textures_;
+  std::unique_ptr<TextureRegistrar> texture_registrar_;
 
   // Plugins registered for ownership.
   std::set<std::unique_ptr<Plugin>> plugins_;

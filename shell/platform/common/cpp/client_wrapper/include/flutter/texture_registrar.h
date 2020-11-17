@@ -12,19 +12,18 @@
 
 namespace flutter {
 
-// An external texture interface declaration.
+// An interface used as an image source by texture widgets.
 class Texture {
  public:
   virtual ~Texture() {}
-  // This interface is used to respond to texture copy requests from the Flutter
-  // engine, Flutter engine will be providing the |height| and |width|
-  // parameters of bounds. In some cases, the user can scale the texture to
-  // the size of the bounds to reduce memory usage.
+
+  // Returns a FlutterDesktopPixelBuffer that contains the actual pixel data.
+  // The intended surface size is specified by |width| and |height|.
   virtual const FlutterDesktopPixelBuffer* CopyPixelBuffer(size_t width,
                                                            size_t height) = 0;
 };
 
-// An object keeping track of external textures
+// An object keeping track of external textures.
 class TextureRegistrar {
  public:
   virtual ~TextureRegistrar() {}
@@ -34,10 +33,10 @@ class TextureRegistrar {
 
   // Notifies the flutter engine that the texture object corresponding
   // to |texure_id| needs to render a new texture.
-  virtual void MarkTextureFrameAvailable(int64_t texture_id) = 0;
+  virtual bool MarkTextureFrameAvailable(int64_t texture_id) = 0;
 
   // Unregisters an existing Texture object.
-  virtual void UnregisterTexture(int64_t texture_id) = 0;
+  virtual bool UnregisterTexture(int64_t texture_id) = 0;
 };
 
 }  // namespace flutter

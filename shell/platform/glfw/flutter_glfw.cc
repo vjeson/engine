@@ -1055,7 +1055,7 @@ FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
   return nullptr;
 }
 
-int64_t FlutterDesktopRegisterExternalTexture(
+int64_t FlutterDesktopTextureRegistrarRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     FlutterDesktopTextureCallback texture_callback,
     void* user_data) {
@@ -1063,14 +1063,14 @@ int64_t FlutterDesktopRegisterExternalTexture(
   return -1;
 }
 
-bool FlutterDesktopUnregisterExternalTexture(
+bool FlutterDesktopTextureRegistrarUnregisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {
   std::cerr << "GLFW Texture support is not implemented yet." << std::endl;
   return false;
 }
 
-bool FlutterDesktopMarkExternalTextureFrameAvailable(
+bool FlutterDesktopTextureRegistrarMarkExternalTextureFrameAvailable(
     FlutterDesktopTextureRegistrarRef texture_registrar,
     int64_t texture_id) {
   std::cerr << "GLFW Texture support is not implemented yet." << std::endl;
