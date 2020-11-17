@@ -149,7 +149,7 @@ uint64_t FlutterDesktopEngineProcessMessages(FlutterDesktopEngineRef engine) {
 }
 
 void FlutterDesktopEngineReloadSystemFonts(FlutterDesktopEngineRef engine) {
-  FlutterEngineReloadSystemFonts(EngineFromHandle(engine)->engine());
+  EngineFromHandle(engine)->ReloadSystemFonts();
 }
 
 FlutterDesktopPluginRegistrarRef FlutterDesktopEngineGetPluginRegistrar(
@@ -235,33 +235,8 @@ bool FlutterDesktopMessengerSendWithReply(FlutterDesktopMessengerRef messenger,
                                           const size_t message_size,
                                           const FlutterDesktopBinaryReply reply,
                                           void* user_data) {
-  FlutterPlatformMessageResponseHandle* response_handle = nullptr;
-  if (reply != nullptr && user_data != nullptr) {
-    FlutterEngineResult result = FlutterPlatformMessageCreateResponseHandle(
-        messenger->engine->engine(), reply, user_data, &response_handle);
-    if (result != kSuccess) {
-      std::cout << "Failed to create response handle\n";
-      return false;
-    }
-  }
-
-  FlutterPlatformMessage platform_message = {
-      sizeof(FlutterPlatformMessage),
-      channel,
-      message,
-      message_size,
-      response_handle,
-  };
-
-  FlutterEngineResult message_result = FlutterEngineSendPlatformMessage(
-      messenger->engine->engine(), &platform_message);
-
-  if (response_handle != nullptr) {
-    FlutterPlatformMessageReleaseResponseHandle(messenger->engine->engine(),
-                                                response_handle);
-  }
-
-  return message_result == kSuccess;
+  return messenger->engine->SendPlatformMessage(channel, message, message_size,
+                                                reply, user_data);
 }
 
 bool FlutterDesktopMessengerSend(FlutterDesktopMessengerRef messenger,
@@ -277,8 +252,7 @@ void FlutterDesktopMessengerSendResponse(
     const FlutterDesktopMessageResponseHandle* handle,
     const uint8_t* data,
     size_t data_length) {
-  FlutterEngineSendPlatformMessageResponse(messenger->engine->engine(), handle,
-                                           data, data_length);
+  messenger->engine->SendPlatformMessageResponse(handle, data, data_length);
 }
 
 void FlutterDesktopMessengerSetCallback(FlutterDesktopMessengerRef messenger,

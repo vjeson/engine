@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart = 2.10
+// @dart = 2.12
 part of engine;
 
 final bool _supportsDecode = js_util.getProperty(
@@ -39,10 +39,20 @@ class HtmlCodec implements ui.Codec {
       js_util.setProperty(imgElement, 'decoding', 'async');
       imgElement.decode().then((dynamic _) {
         chunkCallback?.call(100, 100);
+        int naturalWidth = imgElement.naturalWidth;
+        int naturalHeight = imgElement.naturalHeight;
+        // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=700533.
+        if (naturalWidth == 0 && naturalHeight == 0 && (
+            browserEngine == BrowserEngine.firefox ||
+                browserEngine == BrowserEngine.ie11)) {
+          const int kDefaultImageSizeFallback = 300;
+          naturalWidth = kDefaultImageSizeFallback;
+          naturalHeight = kDefaultImageSizeFallback;
+        }
         final HtmlImage image = HtmlImage(
           imgElement,
-          imgElement.naturalWidth,
-          imgElement.naturalHeight,
+          naturalWidth,
+          naturalHeight,
         );
         completer.complete(SingleFrameInfo(image));
       }).catchError((dynamic e) {
