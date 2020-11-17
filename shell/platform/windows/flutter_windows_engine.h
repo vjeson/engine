@@ -67,6 +67,8 @@ class FlutterWindowsEngine {
   void SetPluginRegistrarDestructionCallback(
       FlutterDesktopOnPluginRegistrarDestroyed callback);
 
+  FLUTTER_API_SYMBOL(FlutterEngine) engine() { return engine_; }
+
   FlutterDesktopMessengerRef messenger() { return messenger_.get(); }
 
   IncomingMessageDispatcher* message_dispatcher() {
