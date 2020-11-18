@@ -34,7 +34,7 @@ int64_t FlutterWindowsTextureRegistrar::RegisterTexture(
   int64_t texture_id = texture_gl->texture_id();
   textures_[texture_id] = std::move(texture_gl);
 
-  if (engine_->RegisterExternalTexture(texture_id) == kSuccess) {
+  if (engine_->RegisterExternalTexture(texture_id)) {
     return texture_id;
   }
 
@@ -46,7 +46,7 @@ bool FlutterWindowsTextureRegistrar::UnregisterTexture(int64_t texture_id) {
   if (it != textures_.end()) {
     textures_.erase(it);
   }
-  return (engine_->UnregisterExternalTexture(texture_id) == kSuccess);
+  return engine_->UnregisterExternalTexture(texture_id);
 }
 
 bool FlutterWindowsTextureRegistrar::MarkTextureFrameAvailable(

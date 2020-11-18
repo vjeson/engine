@@ -156,8 +156,8 @@ TextureRegistrarImpl::TextureRegistrarImpl(
 
 TextureRegistrarImpl::~TextureRegistrarImpl() = default;
 
-int64_t TextureRegistrarImpl::RegisterTexture(TextureVariant& texture) {
-  if (auto pb_texture = std::get_if<PixelBufferTexture>(&texture)) {
+int64_t TextureRegistrarImpl::RegisterTexture(TextureVariant* texture) {
+  if (auto pb_texture = std::get_if<PixelBufferTexture>(texture)) {
     FlutterDesktopPixelBufferTextureConfig config = {};
     config.callback = [](size_t width, size_t height,
                          void* user_data) -> const FlutterDesktopPixelBuffer* {
