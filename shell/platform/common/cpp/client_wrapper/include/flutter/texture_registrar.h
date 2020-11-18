@@ -9,19 +9,24 @@
 #include <stdint.h>
 
 #include <memory>
+#include <variant>
 
 namespace flutter {
 
 // An interface used as an image source by texture widgets.
-class Texture {
+class PixelBufferTexture {
  public:
-  virtual ~Texture() {}
+  virtual ~PixelBufferTexture() {}
 
   // Returns a FlutterDesktopPixelBuffer that contains the actual pixel data.
   // The intended surface size is specified by |width| and |height|.
   virtual const FlutterDesktopPixelBuffer* CopyPixelBuffer(size_t width,
-                                                           size_t height) = 0;
+                                                           size_t height) {
+    return nullptr;
+  };
 };
+
+typedef std::variant<PixelBufferTexture> TextureVariant;
 
 // An object keeping track of external textures.
 class TextureRegistrar {
@@ -29,7 +34,7 @@ class TextureRegistrar {
   virtual ~TextureRegistrar() {}
 
   // Registers a |texture| object and returns the ID for that texture.
-  virtual int64_t RegisterTexture(Texture* texture) = 0;
+  virtual int64_t RegisterTexture(TextureVariant& texture) = 0;
 
   // Notifies the flutter engine that the texture object corresponding
   // to |texure_id| needs to render a new texture.
