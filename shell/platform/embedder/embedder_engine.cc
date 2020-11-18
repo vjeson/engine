@@ -142,18 +142,12 @@ bool EmbedderEngine::SendPlatformMessage(
     return false;
   }
 
-  fml::TaskRunner::RunNowOrPostTask(
-      task_runners_.GetPlatformTaskRunner(), [&, message] {
-    auto platform_view = shell_->GetPlatformView();
-    platform_view->DispatchPlatformMessage(message);
-  });
+  auto platform_view = shell_->GetPlatformView();
+  if (!platform_view) {
+    return false;
+  }
 
-  //auto platform_view = shell_->GetPlatformView();
-  //if (!platform_view) {
-  //  return false;
-  //}
-
-  //platform_view->DispatchPlatformMessage(message);
+  platform_view->DispatchPlatformMessage(message);
   return true;
 }
 
@@ -186,17 +180,8 @@ bool EmbedderEngine::MarkTextureFrameAvailable(int64_t texture) {
   if (!IsValid() || !external_texture_callback_) {
     return false;
   }
-  
-  fml::TaskRunner::RunNowOrPostTask(task_runners_.GetPlatformTaskRunner(),
-                                    [&] {
-                                      shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
-                                    });
-
-   //shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
-
-  // shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
+  shell_->GetPlatformView()->MarkTextureFrameAvailable(texture);
 #endif
-
 
   return true;
 }

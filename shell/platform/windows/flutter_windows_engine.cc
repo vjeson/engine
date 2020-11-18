@@ -343,4 +343,17 @@ void FlutterWindowsEngine::SendSystemSettings() {
   // TODO: Send 'flutter/settings' channel settings here as well.
 }
 
+bool FlutterWindowsEngine::RegisterExternalTexture(int64_t texture_id) {
+  return embedder_api_.RegisterExternalTexture(engine_, texture_id);
+}
+
+bool FlutterWindowsEngine::UnregisterExternalTexture(int64_t texture_id) {
+  return embedder_api_.UnregisterExternalTexture(engine_, texture_id);
+}
+
+bool FlutterWindowsEngine::MarkExternalTextureFrameAvailable(
+    int64_t texture_id) {
+  return embedder_api_.MarkExternalTextureFrameAvailable(engine_, texture_id);
+}
+
 }  // namespace flutter

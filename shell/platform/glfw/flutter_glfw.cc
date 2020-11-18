@@ -1057,8 +1057,7 @@ FlutterDesktopTextureRegistrarRef FlutterDesktopRegistrarGetTextureRegistrar(
 
 int64_t FlutterDesktopTextureRegistrarRegisterExternalTexture(
     FlutterDesktopTextureRegistrarRef texture_registrar,
-    FlutterDesktopTextureCallback texture_callback,
-    void* user_data) {
+    const FlutterDesktopTextureInfo* texture_info) {
   std::cerr << "GLFW Texture support is not implemented yet." << std::endl;
   return -1;
 }
