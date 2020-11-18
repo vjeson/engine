@@ -28,7 +28,8 @@ int64_t FlutterWindowsTextureRegistrar::RegisterTexture(
   }
 
   auto texture_gl = std::make_unique<flutter::ExternalTextureGL>(
-      texture_info->pixel_buffer.callback, texture_info->pixel_buffer.callback);
+      engine_, texture_info->pixel_buffer.callback,
+      texture_info->pixel_buffer.callback);
 
   int64_t texture_id = texture_gl->texture_id();
   textures_[texture_id] = std::move(texture_gl);
@@ -50,7 +51,16 @@ bool FlutterWindowsTextureRegistrar::UnregisterTexture(int64_t texture_id) {
 
 bool FlutterWindowsTextureRegistrar::MarkTextureFrameAvailable(
     int64_t texture_id) {
-  return (engine_->MarkExternalTextureFrameAvailable(texture_id) == kSuccess);
+  auto it = textures_.find(texture_id);
+  if (it != textures_.end()) {
+    return engine_->PostPlatformThreadTask(
+        [](void* data) {
+          auto texture = reinterpret_cast<ExternalTextureGL*>(data);
+          texture->MarkFrameAvailable();
+        },
+        it->second.get());
+  }
+  return false;
 }
 
 bool FlutterWindowsTextureRegistrar::PopulateTexture(
