@@ -101,15 +101,16 @@ TEST(TextureRegistrarTest, RegisterUnregisterTexture) {
   auto texture = test_api->GetFakeTexture(0);
   EXPECT_EQ(texture, nullptr);
 
-  TextureVariant texture_variant = {TestPixelBufferTexture()};
-  int64_t texture_id = textures->RegisterTexture(texture_variant);
+  auto pixel_buffer_texture =
+      std::make_unique<TextureVariant>(TestPixelBufferTexture());
+  int64_t texture_id = textures->RegisterTexture(pixel_buffer_texture.get());
   EXPECT_EQ(test_api->last_texture_id(), texture_id);
   EXPECT_EQ(test_api->textures_size(), static_cast<size_t>(1));
 
   texture = test_api->GetFakeTexture(texture_id);
   EXPECT_EQ(texture->texture_id, texture_id);
   EXPECT_EQ(texture->user_data,
-            std::get_if<PixelBufferTexture>(&texture_variant));
+            std::get_if<PixelBufferTexture>(pixel_buffer_texture.get()));
 
   textures->MarkTextureFrameAvailable(texture_id);
   textures->MarkTextureFrameAvailable(texture_id);

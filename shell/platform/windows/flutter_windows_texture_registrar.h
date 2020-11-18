@@ -39,8 +39,6 @@ class FlutterWindowsTextureRegistrar {
                        size_t height,
                        FlutterOpenGLTexture* texture);
 
-  void Post(VoidCallback cb, void* baton);
-
  private:
   FlutterWindowsEngine* engine_ = nullptr;
 

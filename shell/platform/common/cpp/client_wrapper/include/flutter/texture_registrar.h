@@ -34,7 +34,7 @@ class TextureRegistrar {
   virtual ~TextureRegistrar() {}
 
   // Registers a |texture| object and returns the ID for that texture.
-  virtual int64_t RegisterTexture(TextureVariant& texture) = 0;
+  virtual int64_t RegisterTexture(TextureVariant* texture) = 0;
 
   // Notifies the flutter engine that the texture object corresponding
   // to |texure_id| needs to render a new texture.
