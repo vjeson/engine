@@ -2060,6 +2060,8 @@ typedef FlutterEngineResult (*FlutterEnginePostRenderThreadTaskFnPtr)(
     FLUTTER_API_SYMBOL(FlutterEngine) engine,
     VoidCallback callback,
     void* callback_data);
+typedef FlutterEnginePostRenderThreadTaskFnPtr
+    FlutterEnginePostPlatformThreadTaskFnPtr;
 typedef uint64_t (*FlutterEngineGetCurrentTimeFnPtr)();
 typedef FlutterEngineResult (*FlutterEngineRunTaskFnPtr)(
     FLUTTER_API_SYMBOL(FlutterEngine) engine,
@@ -2117,6 +2119,7 @@ typedef struct {
   FlutterEngineTraceEventDurationBeginFnPtr TraceEventDurationBegin;
   FlutterEngineTraceEventDurationEndFnPtr TraceEventDurationEnd;
   FlutterEngineTraceEventInstantFnPtr TraceEventInstant;
+  FlutterEnginePostPlatformThreadTaskFnPtr PostPlatformThreadTask;
   FlutterEnginePostRenderThreadTaskFnPtr PostRenderThreadTask;
   FlutterEngineGetCurrentTimeFnPtr GetCurrentTime;
   FlutterEngineRunTaskFnPtr RunTask;

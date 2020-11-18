@@ -67,8 +67,6 @@ class FlutterWindowsEngine {
   void SetPluginRegistrarDestructionCallback(
       FlutterDesktopOnPluginRegistrarDestroyed callback);
 
-  FLUTTER_API_SYMBOL(FlutterEngine) engine() { return engine_; }
-
   FlutterDesktopMessengerRef messenger() { return messenger_.get(); }
 
   IncomingMessageDispatcher* message_dispatcher() {
@@ -121,6 +119,9 @@ class FlutterWindowsEngine {
   // Notifies the engine about a new frame being available for the
   // given |texture_id|.
   bool MarkExternalTextureFrameAvailable(int64_t texture_id);
+
+  // Posts a task onto the platform thread.
+  bool PostPlatformThreadTask(VoidCallback callback, void* callback_data);
 
  private:
   // Allows swapping out embedder_api_ calls in tests.
