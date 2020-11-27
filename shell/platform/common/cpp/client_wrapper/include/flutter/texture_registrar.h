@@ -16,14 +16,22 @@ namespace flutter {
 // An interface used as an image source by texture widgets.
 class PixelBufferTexture {
  public:
+ PixelBufferTexture(){} 
+ PixelBufferTexture(PixelBufferTexture* imp):imp_(imp)
+ {}
+
   virtual ~PixelBufferTexture() {}
 
   // Returns a FlutterDesktopPixelBuffer that contains the actual pixel data.
   // The intended surface size is specified by |width| and |height|.
   virtual const FlutterDesktopPixelBuffer* CopyPixelBuffer(size_t width,
                                                            size_t height) {
+    if(imp_){
+      return imp_->CopyPixelBuffer(width,height);
+    }
     return nullptr;
   };
+  PixelBufferTexture* imp_;
 };
 
 typedef std::variant<PixelBufferTexture> TextureVariant;
