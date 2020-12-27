@@ -157,18 +157,17 @@ TextureRegistrarImpl::TextureRegistrarImpl(
 TextureRegistrarImpl::~TextureRegistrarImpl() = default;
 
 int64_t TextureRegistrarImpl::RegisterTexture(TextureVariant* texture) {
-  if (auto pb_texture = std::get_if<PixelBufferTexture>(texture)) {
-    FlutterDesktopPixelBufferTextureConfig config = {};
-    config.callback = [](size_t width, size_t height,
-                         void* user_data) -> const FlutterDesktopPixelBuffer* {
-      return static_cast<PixelBufferTexture*>(user_data)->CopyPixelBuffer(
-          width, height);
-    };
-    config.user_data = pb_texture;
-
+  if (auto pixel_buffer_texture = std::get_if<PixelBufferTexture>(texture)) {
     FlutterDesktopTextureInfo info = {};
     info.type = kFlutterDesktopPixelBufferTexture;
-    info.pixel_buffer = config;
+    info.pixel_buffer.user_data = pixel_buffer_texture;
+    info.pixel_buffer.callback =
+        [](size_t width, size_t height,
+           void* user_data) -> const FlutterDesktopPixelBuffer* {
+      auto texture = static_cast<PixelBufferTexture*>(user_data);
+      auto buffer = texture->delegate()->CopyPixelBuffer(width, height);
+      return buffer;
+    };
 
     int64_t texture_id = FlutterDesktopTextureRegistrarRegisterExternalTexture(
         texture_registrar_ref_, &info);

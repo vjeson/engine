@@ -13,25 +13,26 @@
 
 namespace flutter {
 
-// An interface used as an image source by texture widgets.
-class PixelBufferTexture {
+// An interface used as an image source by pixel buffer textures.
+class PixelBufferTextureDelegate {
  public:
- PixelBufferTexture(){} 
- PixelBufferTexture(PixelBufferTexture* imp):imp_(imp)
- {}
-
-  virtual ~PixelBufferTexture() {}
+  virtual ~PixelBufferTextureDelegate() = default;
 
   // Returns a FlutterDesktopPixelBuffer that contains the actual pixel data.
   // The intended surface size is specified by |width| and |height|.
   virtual const FlutterDesktopPixelBuffer* CopyPixelBuffer(size_t width,
-                                                           size_t height) {
-    if(imp_){
-      return imp_->CopyPixelBuffer(width,height);
-    }
-    return nullptr;
-  };
-  PixelBufferTexture* imp_;
+                                                           size_t height) = 0;
+};
+
+// A pixel buffer texture.
+class PixelBufferTexture {
+ public:
+  PixelBufferTexture(std::unique_ptr<PixelBufferTextureDelegate>&& delegate)
+      : delegate_(std::move(delegate)) {}
+  PixelBufferTextureDelegate* delegate() const { return delegate_.get(); };
+
+ private:
+  std::unique_ptr<PixelBufferTextureDelegate> delegate_;
 };
 
 typedef std::variant<PixelBufferTexture> TextureVariant;
@@ -39,7 +40,7 @@ typedef std::variant<PixelBufferTexture> TextureVariant;
 // An object keeping track of external textures.
 class TextureRegistrar {
  public:
-  virtual ~TextureRegistrar() {}
+  virtual ~TextureRegistrar() = default;
 
   // Registers a |texture| object and returns the ID for that texture.
   virtual int64_t RegisterTexture(TextureVariant* texture) = 0;
