@@ -55,9 +55,11 @@ class MockExternalViewEmbedder : public ExternalViewEmbedder {
                    fml::RefPtr<fml::RasterThreadMerger> raster_thread_merger));
   MOCK_METHOD0(GetCurrentCanvases, std::vector<SkCanvas*>());
   MOCK_METHOD1(CompositeEmbeddedView, SkCanvas*(int view_id));
-  MOCK_METHOD2(SubmitFrame,
-               void(GrDirectContext* context,
-                    std::unique_ptr<SurfaceFrame> frame));
+  MOCK_METHOD3(
+      SubmitFrame,
+      void(GrDirectContext* context,
+           std::unique_ptr<SurfaceFrame> frame,
+           const std::shared_ptr<fml::SyncSwitch>& gpu_disable_sync_switch));
   MOCK_METHOD2(EndFrame,
                void(bool should_resubmit_frame,
                     fml::RefPtr<fml::RasterThreadMerger> raster_thread_merger));
@@ -75,7 +77,7 @@ TEST(RasterizerTest, drawEmptyPipeline) {
   std::string test_name =
       ::testing::UnitTest::GetInstance()->current_test_info()->name();
   ThreadHost thread_host("io.flutter.test." + test_name + ".",
-                         ThreadHost::Type::Platform | ThreadHost::Type::GPU |
+                         ThreadHost::Type::Platform | ThreadHost::Type::RASTER |
                              ThreadHost::Type::IO | ThreadHost::Type::UI);
   TaskRunners task_runners("test", thread_host.platform_thread->GetTaskRunner(),
                            thread_host.raster_thread->GetTaskRunner(),
@@ -100,7 +102,7 @@ TEST(RasterizerTest,
   std::string test_name =
       ::testing::UnitTest::GetInstance()->current_test_info()->name();
   ThreadHost thread_host("io.flutter.test." + test_name + ".",
-                         ThreadHost::Type::Platform | ThreadHost::Type::GPU |
+                         ThreadHost::Type::Platform | ThreadHost::Type::RASTER |
                              ThreadHost::Type::IO | ThreadHost::Type::UI);
   TaskRunners task_runners("test", thread_host.platform_thread->GetTaskRunner(),
                            thread_host.raster_thread->GetTaskRunner(),
@@ -158,7 +160,7 @@ TEST(
   std::string test_name =
       ::testing::UnitTest::GetInstance()->current_test_info()->name();
   ThreadHost thread_host("io.flutter.test." + test_name + ".",
-                         ThreadHost::Type::Platform | ThreadHost::Type::GPU |
+                         ThreadHost::Type::Platform | ThreadHost::Type::RASTER |
                              ThreadHost::Type::IO | ThreadHost::Type::UI);
   TaskRunners task_runners("test", thread_host.platform_thread->GetTaskRunner(),
                            thread_host.raster_thread->GetTaskRunner(),
@@ -212,7 +214,7 @@ TEST(
   std::string test_name =
       ::testing::UnitTest::GetInstance()->current_test_info()->name();
   ThreadHost thread_host("io.flutter.test." + test_name + ".",
-                         ThreadHost::Type::Platform | ThreadHost::Type::GPU |
+                         ThreadHost::Type::Platform | ThreadHost::Type::RASTER |
                              ThreadHost::Type::IO | ThreadHost::Type::UI);
   fml::MessageLoop::EnsureInitializedForCurrentThread();
   TaskRunners task_runners("test",
@@ -266,7 +268,7 @@ TEST(RasterizerTest, externalViewEmbedderDoesntEndFrameWhenNoSurfaceIsSet) {
   std::string test_name =
       ::testing::UnitTest::GetInstance()->current_test_info()->name();
   ThreadHost thread_host("io.flutter.test." + test_name + ".",
-                         ThreadHost::Type::Platform | ThreadHost::Type::GPU |
+                         ThreadHost::Type::Platform | ThreadHost::Type::RASTER |
                              ThreadHost::Type::IO | ThreadHost::Type::UI);
   TaskRunners task_runners("test", thread_host.platform_thread->GetTaskRunner(),
                            thread_host.raster_thread->GetTaskRunner(),

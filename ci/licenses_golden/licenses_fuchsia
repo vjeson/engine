@@ -1,4 +1,4 @@
-Signature: 17654d266730cd3d4c20fc34f3bfc077
+Signature: 33608cc3db2bc47edec6f2f0e29f9117
 
 UNUSED LICENSES:
 
@@ -417,7 +417,6 @@ FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libm.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libpthread.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/librt.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libzircon.so
-FILE: ../../../fuchsia/sdk/linux/dart/composition_delegate/lib/src/internal/layout_logic/_layout_logic.dart
 FILE: ../../../fuchsia/sdk/linux/dart/composition_delegate/meta.json
 FILE: ../../../fuchsia/sdk/linux/dart/fidl/meta.json
 FILE: ../../../fuchsia/sdk/linux/dart/fuchsia/meta.json
@@ -446,6 +445,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.gatt/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.le/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.sys/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/meta.json
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.buildinfo/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera2.hal/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera2/meta.json
@@ -469,7 +469,6 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.factory/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.feedback/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.fonts/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.ethernet/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.goldfish/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.light/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.network/meta.json
@@ -505,14 +504,12 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.migration/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular.session/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular.testing/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.dhcp/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.http/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.interfaces/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.mdns/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.oldhttp/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.routes/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.netstack/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix.socket/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.process/meta.json
@@ -525,6 +522,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sys.test/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sys/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysinfo/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysmem/meta.json
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.thread/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.tracing.provider/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.activity.control/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.activity/meta.json
@@ -549,6 +547,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.web/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.common/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.policy/meta.json
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedclient/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedconfiguration/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.service/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.stats/meta.json
@@ -1274,6 +1273,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/device_class.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/id.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/uuid.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.buildinfo/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera2.hal/hal.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera2.hal/meta.json
@@ -1322,7 +1322,6 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/audio.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/ring_buffer.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/stream.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.ethernet/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.goldfish/goldfish_address_space.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.goldfish/goldfish_control.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.goldfish/goldfish_pipe.fidl
@@ -1414,10 +1413,6 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular.testing/test_harness.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular/annotation.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular/story_shell_factory.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.dhcp/client.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.dhcp/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.dhcp/options.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.dhcp/server.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.http/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.interfaces/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.mdns/meta.json
@@ -1425,7 +1420,6 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.oldhttp/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.routes/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net/namelookup.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.netstack/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix.socket/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix.socket/socket.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix/meta.json
@@ -1453,6 +1447,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sys/types.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysinfo/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysmem/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysmem/secure_mem.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.thread/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.tracing.provider/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.activity.control/control.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.activity.control/meta.json
@@ -1512,6 +1507,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.policy/access_point_provider.
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.policy/client_provider.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.policy/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.policy/types.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedclient/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedconfiguration/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.service/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.stats/meta.json
@@ -1680,9 +1676,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -2108,7 +2101,6 @@ FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libm.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libpthread.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/librt.so
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/lib/libzircon.so
-FILE: ../../../fuchsia/sdk/linux/dart/composition_delegate/lib/src/internal/layout_logic/_layout_logic.dart
 FILE: ../../../fuchsia/sdk/linux/dart/composition_delegate/meta.json
 FILE: ../../../fuchsia/sdk/linux/dart/fidl/meta.json
 FILE: ../../../fuchsia/sdk/linux/dart/fuchsia/meta.json
@@ -2137,6 +2129,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.gatt/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.le/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.sys/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/meta.json
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.buildinfo/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera2.hal/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera2/meta.json
@@ -2160,7 +2153,6 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.factory/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.feedback/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.fonts/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.ethernet/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.goldfish/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.light/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.network/meta.json
@@ -2196,14 +2188,12 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.migration/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular.session/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular.testing/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.modular/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.dhcp/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.http/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.interfaces/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.mdns/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.oldhttp/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net.routes/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.net/meta.json
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.netstack/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix.socket/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.posix/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.process/meta.json
@@ -2216,6 +2206,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sys.test/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sys/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysinfo/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.sysmem/meta.json
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.thread/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.tracing.provider/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.activity.control/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.activity/meta.json
@@ -2240,6 +2231,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.web/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.common/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.policy/meta.json
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedclient/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedconfiguration/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.service/meta.json
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.stats/meta.json
@@ -2604,13 +2596,11 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.control/pairing_delegate
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.control/remote_device.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.gatt/types.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.le/central.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/nullables.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera/camera.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera/manager.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.cobalt/cobalt.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.data/data.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.developer.tiles/tiles.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.ethernet/ethernet.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.images/encoded_image.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.images/image_info.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.images/image_pipe.fidl
@@ -2689,7 +2679,6 @@ FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/message_builder.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/walker.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/binding.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/binding_set.h
-FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/enum.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/interface_ptr.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/interface_ptr_set.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/internal/header.h
@@ -2721,16 +2710,17 @@ FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/coding_t
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/comparison.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/decoder.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/encoder.h
-FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/internal/logging.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/enum.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/interface_handle.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/interface_request.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/object_coding.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/string.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/traits.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/vector.h
-FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/internal/logging.cc
-FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/include/lib/fidl/cpp/interface_handle.h
-FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/include/lib/fidl/cpp/interface_request.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/include/lib/fidl/cpp/internal/logging.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/include/lib/fidl/cpp/internal/synchronous_proxy.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/include/lib/fidl/cpp/synchronous_interface_ptr.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/internal/logging.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_sync/internal/synchronous_proxy.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fit/include/lib/fit/bridge.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fit/include/lib/fit/bridge_internal.h
@@ -2813,9 +2803,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -2834,9 +2821,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 LIBRARY: fuchsia_sdk
 ORIGIN: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/crash-reason.h + ../../../fuchsia/sdk/linux/LICENSE
 TYPE: LicenseType.bsd
+FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/analyzer.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/boot/crash-reason.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/string_view.h
 FILE: ../../../fuchsia/sdk/linux/arch/arm64/sysroot/include/zircon/testonly-syscalls.h
+FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/analyzer.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/boot/crash-reason.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/string_view.h
 FILE: ../../../fuchsia/sdk/linux/arch/x64/sysroot/include/zircon/testonly-syscalls.h
@@ -2864,6 +2853,9 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.le/connection_options.fi
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.sys/configuration.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.sys/pairing_options.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.sys/security_mode.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/deprecated.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/device_name.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.buildinfo/buildinfo.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera3/device.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera3/device_watcher.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.camera3/stream.fidl
@@ -2880,6 +2872,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.factory.wlan/iovar.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.feedback/crash_register.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.feedback/data_register.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.feedback/last_reboot_info.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/codec.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/dai.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.audio/dai_format.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.hardware.network/device.fidl
@@ -2917,6 +2910,7 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/factory_reset.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/input.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/light.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.settings/night_mode.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.thread/bootstrap.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.input3/events.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.input3/keyboard.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.ui.input3/modifiers.fidl
@@ -2935,12 +2929,15 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/auth.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/bootstrap.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/common.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.weave/weavestack.fidl
+FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedclient/wlan_deprecated_client.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.wlan.product.deprecatedconfiguration/wlan_deprecated_configuration.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/zx/zx_common.fidl
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/handle_close_many.cc
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/include/lib/fidl/trace.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_base/validate_string.cc
-FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp/include/lib/fidl/cpp/internal/bitset.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/internal/bitset.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/internal/natural_types_header.h
+FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/internal/natural_types_implementation.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fidl_cpp_base/include/lib/fidl/cpp/types.h
 FILE: ../../../fuchsia/sdk/linux/pkg/fit/include/lib/fit/source_location.h
 FILE: ../../../fuchsia/sdk/linux/pkg/scenic_cpp/commands_sizing.cc
@@ -2962,9 +2959,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3019,7 +3013,6 @@ FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.gatt/client.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.gatt/server.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.le/peripheral.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth.le/types_deprecated.fidl
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.bluetooth/status.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.cobalt/cobalt_controller.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.images/presentation_info.fidl
 FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.media/audio_capturer.fidl
@@ -3124,9 +3117,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3161,9 +3151,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3301,9 +3288,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3416,44 +3400,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-====================================================================================================
-
-====================================================================================================
-LIBRARY: fuchsia_sdk
-ORIGIN: ../../../fuchsia/sdk/linux/fidl/fuchsia.netstack/netstack.fidl + ../../../fuchsia/sdk/linux/LICENSE
-TYPE: LicenseType.bsd
-FILE: ../../../fuchsia/sdk/linux/fidl/fuchsia.netstack/netstack.fidl
-----------------------------------------------------------------------------------------------------
-Copyright 2013 The Fuchsia Authors. All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-   * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3488,9 +3434,6 @@ notice, this list of conditions and the following disclaimer.
 copyright notice, this list of conditions and the following disclaimer
 in the documentation and/or other materials provided with the
 distribution.
-   * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -3504,4 +3447,4 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ====================================================================================================
-Total license count: 14
+Total license count: 13

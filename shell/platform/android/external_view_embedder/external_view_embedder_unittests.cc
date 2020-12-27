@@ -228,8 +228,8 @@ TEST(AndroidExternalViewEmbedder, PlatformViewRect) {
   SkMatrix matrix;
   matrix.setIdentity();
   // The framework always push a scale matrix based on the screen ratio.
-  matrix.setConcat(matrix, SkMatrix::MakeScale(1.5, 1.5));
-  matrix.setConcat(matrix, SkMatrix::MakeTrans(10, 20));
+  matrix.setConcat(matrix, SkMatrix::Scale(1.5, 1.5));
+  matrix.setConcat(matrix, SkMatrix::Translate(10, 20));
   auto view_params =
       std::make_unique<EmbeddedViewParams>(matrix, SkSize::Make(30, 40), stack);
 
@@ -256,7 +256,7 @@ TEST(AndroidExternalViewEmbedder, PlatformViewRect__ChangedParams) {
   SkMatrix matrix1;
   matrix1.setIdentity();
   // The framework always push a scale matrix based on the screen ratio.
-  matrix1.setConcat(SkMatrix::MakeScale(1.5, 1.5), SkMatrix::MakeTrans(10, 20));
+  matrix1.setConcat(SkMatrix::Scale(1.5, 1.5), SkMatrix::Translate(10, 20));
   auto view_params_1 = std::make_unique<EmbeddedViewParams>(
       matrix1, SkSize::Make(30, 40), stack1);
 
@@ -266,8 +266,8 @@ TEST(AndroidExternalViewEmbedder, PlatformViewRect__ChangedParams) {
   SkMatrix matrix2;
   matrix2.setIdentity();
   // The framework always push a scale matrix based on the screen ratio.
-  matrix2.setConcat(matrix2, SkMatrix::MakeScale(1.5, 1.5));
-  matrix2.setConcat(matrix2, SkMatrix::MakeTrans(50, 60));
+  matrix2.setConcat(matrix2, SkMatrix::Scale(1.5, 1.5));
+  matrix2.setConcat(matrix2, SkMatrix::Translate(50, 60));
   auto view_params_2 = std::make_unique<EmbeddedViewParams>(
       matrix2, SkSize::Make(70, 80), stack2);
 
@@ -331,7 +331,7 @@ TEST(AndroidExternalViewEmbedder, SubmitFrame) {
           return true;
         });
 
-    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame));
+    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame), nullptr);
     // Submits frame if no Android view in the current frame.
     EXPECT_TRUE(did_submit_frame);
     // Doesn't resubmit frame.
@@ -351,8 +351,8 @@ TEST(AndroidExternalViewEmbedder, SubmitFrame) {
     MutatorsStack stack1;
     SkMatrix matrix1;
     matrix1.setIdentity();
-    SkMatrix scale = SkMatrix::MakeScale(1.5, 1.5);
-    SkMatrix trans = SkMatrix::MakeTrans(100, 100);
+    SkMatrix scale = SkMatrix::Scale(1.5, 1.5);
+    SkMatrix trans = SkMatrix::Translate(100, 100);
     matrix1.setConcat(scale, trans);
     stack1.PushTransform(scale);
     stack1.PushTransform(trans);
@@ -398,7 +398,7 @@ TEST(AndroidExternalViewEmbedder, SubmitFrame) {
           return true;
         });
 
-    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame));
+    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame), nullptr);
     // Doesn't submit frame if there aren't Android views in the previous frame.
     EXPECT_FALSE(did_submit_frame);
     // Resubmits frame.
@@ -418,8 +418,8 @@ TEST(AndroidExternalViewEmbedder, SubmitFrame) {
     MutatorsStack stack1;
     SkMatrix matrix1;
     matrix1.setIdentity();
-    SkMatrix scale = SkMatrix::MakeScale(1.5, 1.5);
-    SkMatrix trans = SkMatrix::MakeTrans(100, 100);
+    SkMatrix scale = SkMatrix::Scale(1.5, 1.5);
+    SkMatrix trans = SkMatrix::Translate(100, 100);
     matrix1.setConcat(scale, trans);
     stack1.PushTransform(scale);
     stack1.PushTransform(trans);
@@ -462,7 +462,7 @@ TEST(AndroidExternalViewEmbedder, SubmitFrame) {
           }
           return true;
         });
-    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame));
+    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame), nullptr);
     // Submits frame if there are Android views in the previous frame.
     EXPECT_TRUE(did_submit_frame);
     // Doesn't resubmit frame.
@@ -560,7 +560,7 @@ TEST(AndroidExternalViewEmbedder, DestroyOverlayLayersOnSizeChange) {
         std::make_unique<SurfaceFrame>(SkSurface::MakeNull(1000, 1000), false,
                                        [](const SurfaceFrame& surface_frame,
                                           SkCanvas* canvas) { return true; });
-    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame));
+    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame), nullptr);
 
     EXPECT_CALL(*jni_mock, FlutterViewEndFrame());
     embedder->EndFrame(/*should_resubmit_frame=*/false, raster_thread_merger);
@@ -640,7 +640,7 @@ TEST(AndroidExternalViewEmbedder, DoesNotDestroyOverlayLayersOnSizeChange) {
         std::make_unique<SurfaceFrame>(SkSurface::MakeNull(1000, 1000), false,
                                        [](const SurfaceFrame& surface_frame,
                                           SkCanvas* canvas) { return true; });
-    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame));
+    embedder->SubmitFrame(gr_context.get(), std::move(surface_frame), nullptr);
 
     EXPECT_CALL(*jni_mock, FlutterViewEndFrame());
     embedder->EndFrame(/*should_resubmit_frame=*/false, raster_thread_merger);

@@ -889,7 +889,17 @@ class SemanticsObject {
         effectiveTransformIsIdentity = effectiveTransform.isIdentity();
       }
     } else if (!hasIdentityTransform) {
-      effectiveTransform = Matrix4.fromFloat32List(transform!);
+      // After https://github.com/dart-lang/language/issues/1274 is implemented,
+      // `transform` will be promoted to non-nullable so we won't need to null
+      // check it (and it will cause a build failure to try to do so).  Until
+      // then, we need to null check it in such a way that won't cause a build
+      // failure once the feature is implemented.  We can do that using an
+      // explicit "if" test.
+      // TODO(paulberry): remove this check once the feature is implemented.
+      if (transform == null) { // ignore: unnecessary_null_comparison
+        throw 'impossible';
+      }
+      effectiveTransform = Matrix4.fromFloat32List(transform);
       effectiveTransformIsIdentity = false;
     }
 
@@ -1265,11 +1275,11 @@ class EngineSemanticsOwner {
 
   final SemanticsHelper semanticsHelper = SemanticsHelper();
 
-  /// Whether the user has requested that [updateSemantics] be called when
-  /// the semantic contents of window changes.
+  /// Whether the user has requested that [updateSemantics] be called when the
+  /// semantic contents of window changes.
   ///
-  /// The [ui.Window.onSemanticsEnabledChanged] callback is called whenever this
-  /// value changes.
+  /// The [ui.PlatformDispatcher.onSemanticsEnabledChanged] callback is called
+  /// whenever this value changes.
   ///
   /// This is separate from accessibility [mode], which controls how gestures
   /// are interpreted when this value is true.
