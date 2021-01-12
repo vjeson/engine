@@ -194,7 +194,8 @@ bool FlutterWindowsEngine::RunWithEntrypoint(const char* entrypoint) {
   platform_task_runner.post_task_callback = [](FlutterTask task,
                                                uint64_t target_time_nanos,
                                                void* user_data) -> void {
-    static_cast<TaskRunner*>(user_data)->PostTask(task, target_time_nanos);
+    static_cast<TaskRunner*>(user_data)->PostFlutterTask(task,
+                                                         target_time_nanos);
   };
   FlutterCustomTaskRunners custom_task_runners = {};
   custom_task_runners.struct_size = sizeof(FlutterCustomTaskRunners);
@@ -381,12 +382,6 @@ bool FlutterWindowsEngine::MarkExternalTextureFrameAvailable(
     int64_t texture_id) {
   return (embedder_api_.MarkExternalTextureFrameAvailable(
               engine_, texture_id) == kSuccess);
-}
-
-bool FlutterWindowsEngine::PostPlatformThreadTask(VoidCallback callback,
-                                                  void* callback_data) {
-  return (embedder_api_.PostPlatformThreadTask(engine_, callback,
-                                               callback_data) == kSuccess);
 }
 
 }  // namespace flutter

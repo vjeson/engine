@@ -7,6 +7,7 @@
 #include "flutter/shell/platform/windows/flutter_windows_engine.h"
 
 #include <iostream>
+#include <mutex>
 
 namespace flutter {
 
@@ -28,51 +29,61 @@ int64_t FlutterWindowsTextureRegistrar::RegisterTexture(
   }
 
   auto texture_gl = std::make_unique<flutter::ExternalTextureGL>(
-      engine_, texture_info->pixel_buffer_config.callback,
+      texture_info->pixel_buffer_config.callback,
       texture_info->pixel_buffer_config.user_data);
-
   int64_t texture_id = texture_gl->texture_id();
-  textures_[texture_id] = std::move(texture_gl);
 
-  if (engine_->RegisterExternalTexture(texture_id)) {
-    return texture_id;
+  {
+    std::lock_guard<std::mutex> lock(map_mutex_);
+    textures_[texture_id] = std::move(texture_gl);
   }
 
-  return -1;
+  engine_->task_runner()->RunNowOrPostTask([engine = engine_, texture_id]() {
+    engine->RegisterExternalTexture(texture_id);
+  });
+
+  return texture_id;
 }
 
 bool FlutterWindowsTextureRegistrar::UnregisterTexture(int64_t texture_id) {
-  auto it = textures_.find(texture_id);
-  if (it != textures_.end()) {
+  {
+    std::lock_guard<std::mutex> lock(map_mutex_);
+    auto it = textures_.find(texture_id);
+    if (it == textures_.end()) {
+      return false;
+    }
     textures_.erase(it);
   }
-  return engine_->UnregisterExternalTexture(texture_id);
+
+  engine_->task_runner()->RunNowOrPostTask([engine = engine_, texture_id]() {
+    engine->UnregisterExternalTexture(texture_id);
+  });
+  return true;
 }
 
 bool FlutterWindowsTextureRegistrar::MarkTextureFrameAvailable(
     int64_t texture_id) {
-  auto it = textures_.find(texture_id);
-  if (it != textures_.end()) {
-    return engine_->PostPlatformThreadTask(
-        [](void* data) {
-          auto texture = reinterpret_cast<ExternalTextureGL*>(data);
-          texture->MarkFrameAvailable();
-        },
-        it->second.get());
-  }
-  return false;
+  engine_->task_runner()->RunNowOrPostTask([engine = engine_, texture_id]() {
+    engine->MarkExternalTextureFrameAvailable(texture_id);
+  });
+  return true;
 }
 
 bool FlutterWindowsTextureRegistrar::PopulateTexture(
     int64_t texture_id,
     size_t width,
     size_t height,
-    FlutterOpenGLTexture* texture) {
-  auto it = textures_.find(texture_id);
-  if (it != textures_.end()) {
-    return it->second->PopulateTexture(width, height, texture);
+    FlutterOpenGLTexture* opengl_texture) {
+  flutter::ExternalTextureGL* texture;
+  {
+    std::lock_guard<std::mutex> lock(map_mutex_);
+    auto it = textures_.find(texture_id);
+    if (it == textures_.end()) {
+      return false;
+    }
+    texture = it->second.get();
   }
-  return false;
+  return texture->PopulateTexture(width, height, opengl_texture);
 }
 
 };  // namespace flutter

@@ -6,12 +6,11 @@
 #define FLUTTER_SHELL_PLATFORM_COMMON_CPP_CLIENT_WRAPPER_INCLUDE_FLUTTER_TEXTURE_REGISTRAR_H_
 
 #include <flutter_texture_registrar.h>
-#include <cstdint>
 
+#include <cstdint>
+#include <functional>
 #include <memory>
 #include <variant>
-
-#include <functional>
 
 namespace flutter {
 
@@ -21,32 +20,37 @@ class PixelBufferTexture {
   // A callback used for retrieving pixel buffers.
   typedef std::function<const FlutterDesktopPixelBuffer*(size_t width,
                                                          size_t height)>
-      CopyBufferCb;
+      CopyBufferCallback;
 
   // Creates a pixel buffer texture that uses the provided |copy_buffer_cb| to
   // retrieve the buffer.
-  PixelBufferTexture(CopyBufferCb copy_buffer_cb)
-      : copy_buffer_cb_(copy_buffer_cb) {}
+  // As the callback is usually invoked from the render thread, the callee must
+  // take care of proper synchronization. It also needs to be ensured that the
+  // returned buffer isn't released prior to unregistering this texture.
+  PixelBufferTexture(CopyBufferCallback copy_buffer_callback)
+      : copy_buffer_callback_(copy_buffer_callback) {}
 
   // Returns the callback-provided FlutterDesktopPixelBuffer that contains the
   // actual pixel data. The intended surface size is specified by |width| and
   // |height|.
   const FlutterDesktopPixelBuffer* CopyPixelBuffer(size_t width,
                                                    size_t height) const {
-    return copy_buffer_cb_(width, height);
+    return copy_buffer_callback_(width, height);
   }
 
  private:
-  const CopyBufferCb copy_buffer_cb_;
+  const CopyBufferCallback copy_buffer_callback_;
 };
 
 // The available texture variants.
-// While PixelBufferTexture is the only implementation we currently have,
-// this is going to be extended once we have additional implementations like
-// PBO-based textures etc.
+// Only PixelBufferTexture is currently implemented.
+// Other variants are expected to be added in the future.
 typedef std::variant<PixelBufferTexture> TextureVariant;
 
 // An object keeping track of external textures.
+//
+// Thread safety:
+// It's safe to call the member methods from any thread.
 class TextureRegistrar {
  public:
   virtual ~TextureRegistrar() = default;
@@ -55,10 +59,14 @@ class TextureRegistrar {
   virtual int64_t RegisterTexture(TextureVariant* texture) = 0;
 
   // Notifies the flutter engine that the texture object corresponding
-  // to |texure_id| needs to render a new texture.
+  // to |texure_id| needs to render a new frame.
+  //
+  // For PixelBufferTextures, this will effectively make the engine invoke
+  // the callback that was provided upon creating the texture.
   virtual bool MarkTextureFrameAvailable(int64_t texture_id) = 0;
 
   // Unregisters an existing Texture object.
+  // Textures must not be unregistered while they're in use.
   virtual bool UnregisterTexture(int64_t texture_id) = 0;
 };
 
